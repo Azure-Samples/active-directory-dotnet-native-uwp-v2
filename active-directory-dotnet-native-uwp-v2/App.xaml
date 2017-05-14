@@ -1,0 +1,8 @@
+﻿<Application
+    x:Class="active_directory_dotnet_native_uwp_v2.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:active_directory_dotnet_native_uwp_v2"
+    RequestedTheme="Light">
+
+</Application>
