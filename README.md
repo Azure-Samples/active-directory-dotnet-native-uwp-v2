@@ -34,7 +34,16 @@ If you just want to quickly run it, use the following instructions:
 
     ``private static string ClientId = "[Application Id pasted from the application registration portal]"``
 
-4. Run the application from Visual Studio (Debug | Start without Debugging), directly on the local machine, or after deploying to a device or an emulator.
+4. (Optionally): Enable Windows Integrated Authentication when using a federated Azure AD tenant
+Out of the box, this sample is not configured to work with Windows Integrated Authentication (WIA) when used with a federated Azure Active Directory domain. To work with WIA the application manifest must enable additional capabilities. These are not configured by default for this sample because applications requesting the Enterprise Authentication or Shared User Certificates capabilities require a higher level of verification to be accepted into the Windows Store, and not all developers may wish to perform the higher level of verification.
+To enable Windows Integrated Authentication, in Package.appxmanifest, in the Capabilities tab, enable:
+    - Enterprise Authentication
+    - Private Networks (Client & Server)
+    - Shared User Certificates
+Also, in the constructor of the application in `App.xaml.cs`, add the following line of code: ```authContext.UseCorporateNetwork = true;```
+
+5. Run the application from Visual Studio (Debug | Start without Debugging), directly on the local machine, or after deploying to a device or an emulator.
+
 
 ## Steps to build from scratch
 Follow the instructions given in [Windows desktop .NET guided walkthrough](https://docs.microsoft.com/azure/active-directory/develop/guidedsetups/active-directory-mobileanddesktopapp-windowsdesktop-intro), but:
