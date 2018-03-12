@@ -7,7 +7,7 @@ author: jmprieur
 
 # Universal Windows Platform application signing in users with Microsoft and calling the Microsoft Graph
 
-| [Getting Started](https://apps.dev.microsoft.com/portal/register-app)| [Library](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) | [Docs](https://aka.ms/aadv2) | [Support](README.md#community-help-and-support) 
+| [Getting Started](https://apps.dev.microsoft.com/portal/register-app)| [Library](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki) | [Docs](https://aka.ms/aadv2) | [Support](README.md#community-help-and-support) 
 | --- | --- | --- | --- |
 
 This simple sample demonstrates how to use the [Microsoft Authentication Library (MSAL) for .NET](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) to get an access token and call the Microsoft Graph (using OAuth 2.0 against the Azure AD v2.0 endpoint) for a Universal Windows Platform (UWP) application.
@@ -40,9 +40,11 @@ To enable Windows Integrated Authentication, in Package.appxmanifest, in the Cap
     - Enterprise Authentication
     - Private Networks (Client & Server)
     - Shared User Certificates
-Also, in the constructor of the application in `App.xaml.cs`, add the following line of code: ```authContext.UseCorporateNetwork = true;```
+Also, in the constructor of the `App` in `App.xaml.cs`, add the following line of code: ```App.PublicClientApp.UseCorporateNetwork = true;```
 
 5. Run the application from Visual Studio (Debug | Start without Debugging), directly on the local machine, or after deploying to a device or an emulator.
+
+> Note that if your organization requires Multiple Factor Authentication (MFA), and you try to use the PIN, the certificate will be proposed, but the PIN window won't be presented. This is a known issue with WIA. As a workaround, you might want to use phone authentication (proposed as alternative ways of doing MFA)
 
 
 ## Steps to build from scratch
