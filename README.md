@@ -7,7 +7,7 @@ client: UWP
 service: Microsoft Graph
 endpoint: AAD V2
 ---
-
+![Build badge](https://identitydivision.visualstudio.com/_apis/public/build/definitions/a7934fdd-dcde-4492-a406-7fad6ac00e17/484/badge)
 
 # Universal Windows Platform application signing in users with Microsoft and calling the Microsoft Graph
 
