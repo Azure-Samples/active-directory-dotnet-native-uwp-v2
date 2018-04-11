@@ -49,8 +49,19 @@ Also, in the constructor of the `App` in `App.xaml.cs`, add the following line o
 
 5. Run the application from Visual Studio (Debug | Start without Debugging), directly on the local machine, or after deploying to a device or an emulator.
 
-> Note that if your organization requires Multiple Factor Authentication (MFA), and you try to use the PIN, the certificate will be proposed, but the PIN window won't be presented. This is a known issue with WIA. As a workaround, you might want to use phone authentication (proposed as alternative ways of doing MFA)
+#### Known limitation: on Windows 10, you cannot sign-in with your windows hello PIN
 
+If sign-in with your work or school account and your organization requires conditional access, you are asked to provide a certificate:
+
+- If you did not enabled UWP specific considerations above, you will get this error:
+    ```Text
+    No valid client certificate found in the request.
+    No valid certificates found in the user's certificate store.
+    Please try again choosing a different authentication method.
+    ```
+- On Windows 10 desktop UWP application, if you enabled the settings described in [UWP specific considerations](#UWP-specific-considerations), the list of certificates is presented, however if you choose to use your PIN, the PIN window is never presented. This is a known limitation with Web authentication broker in UWP applications running on Windows 10 (this works fine on Windows Phone 10). As a work around, you will need to click on the **sign in with other options** link and then choose **Sign-in with a username and password instead**, provide your password and go through the phone authentication.
+
+- we plan to remove this limitation in the future by integrating the Web Account Manager (WAM)
 
 ## Steps to build from scratch
 Follow the instructions given in [Windows desktop .NET guided walkthrough](https://docs.microsoft.com/azure/active-directory/develop/guidedsetups/active-directory-mobileanddesktopapp-windowsdesktop-intro), but:
