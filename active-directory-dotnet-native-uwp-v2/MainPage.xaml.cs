@@ -1,19 +1,10 @@
 ﻿using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -45,9 +36,12 @@ namespace active_directory_dotnet_native_uwp_v2
             ResultText.Text = string.Empty;
             TokenInfoText.Text = string.Empty;
 
+            IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync();
+            IAccount firstAccount = accounts.FirstOrDefault();
+
             try
             {
-                authResult = await App.PublicClientApp.AcquireTokenSilentAsync(scopes, App.PublicClientApp.Users.FirstOrDefault());
+                authResult = await App.PublicClientApp.AcquireTokenSilentAsync(scopes, firstAccount);
             }
             catch (MsalUiRequiredException ex)
             {
@@ -105,13 +99,13 @@ namespace active_directory_dotnet_native_uwp_v2
         /// <summary>
         /// Sign out the current user
         /// </summary>
-        private void SignOutButton_Click(object sender, RoutedEventArgs e)
+        private async void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (App.PublicClientApp.Users.Any())
-            {
+            IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync();
+            IAccount firstAccount = accounts.FirstOrDefault();
                 try
                 {
-                    App.PublicClientApp.Remove(App.PublicClientApp.Users.FirstOrDefault());
+                    await App.PublicClientApp.RemoveAsync(firstAccount);
                     this.ResultText.Text = "User has signed-out";
                     this.CallGraphButton.Visibility = Visibility.Visible;
                     this.SignOutButton.Visibility = Visibility.Collapsed;
@@ -120,7 +114,6 @@ namespace active_directory_dotnet_native_uwp_v2
                 {
                     ResultText.Text = $"Error signing-out user: {ex.Message}";
                 }
-            }
         }
 
         /// <summary>
@@ -131,8 +124,7 @@ namespace active_directory_dotnet_native_uwp_v2
             TokenInfoText.Text = "";
             if (authResult != null)
             {
-                TokenInfoText.Text += $"Name: {authResult.User.Name}" + Environment.NewLine;
-                TokenInfoText.Text += $"Username: {authResult.User.DisplayableId}" + Environment.NewLine;
+                TokenInfoText.Text += $"User Name: {authResult.Account.Username}" + Environment.NewLine;
                 TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
                 TokenInfoText.Text += $"Access Token: {authResult.AccessToken}" + Environment.NewLine;
             }
