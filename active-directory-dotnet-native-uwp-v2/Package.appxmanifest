@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="4f390008-991e-4372-a85d-0010431801e6" Publisher="CN=jmprieur" Version="1.0.0.0" />
+  <Identity Name="4f390008-991e-4372-a85d-0010431801e6" Publisher="CN=jeferrie" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="4f390008-991e-4372-a85d-0010431801e6" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>active-directory-dotnet-native-uwp-v2</DisplayName>
