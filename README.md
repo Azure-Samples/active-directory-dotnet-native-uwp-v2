@@ -35,7 +35,7 @@ If you just want to quickly run it, use the following instructions:
   git clone https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2.git
   ```
 
-3. In the `App.xaml.cs` file, set your application/client id copied from the App Registration Portal.
+3. If you want to use your own application, in the `App.xaml.cs` file, set your application/client id copied from the App Registration Portal where you will have registered an application and added the native platform.
 
     ``private static string ClientId = "[Application Id pasted from the application registration portal]"``
 
