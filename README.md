@@ -5,7 +5,7 @@ author: jmprieur
 level: 200
 client: UWP 
 service: Microsoft Graph
-endpoint: AAD V2
+endpoint: AAD v2.0
 ---
 # Universal Windows Platform application signing in users with Microsoft and calling the Microsoft Graph
 
@@ -34,18 +34,27 @@ If you just want to quickly run it, use the following instructions:
 1. (Optionally) Register an Azure app and configure the code for the application 
 
    If you want to register your own application:
-   1. Sign in to the [Azure portal](https://portal.azure.com) using either a work or school account or a personal Microsoft account.
-   1. If your account gives you access to more than one tenant, select your account in the top right corner, and set your portal session to the desired Azure AD tenant.
-   1. In the left-hand navigation pane, select the **Azure Active Directory** service, and then select **App registrations (Preview)** > **New registration*.
-   1. When the Register an application page appears, enter your application's registration information:
+1. Sign in to the [Azure portal](https://portal.azure.com) using either a work or school account or a personal Microsoft account.
+1. If your account gives you access to more than one tenant, select your account in the top right corner, and set your portal session to the desired Azure AD tenant
+   (using **Switch Directory**).
+1. In the left-hand navigation pane, select the **Azure Active Directory** service, and then select **App registrations (Preview)**.
 
-      - In the *Name* section, Enter a meaningful application name that will be displayed to users of the app, for example `UWP-App-calling-MsGraph`
-      - In the *Supported account types* section, select **Accounts in any organizational directory and personal Microsoft accounts (for example, Skype, Xbox, Outlook.com)**
-      - Click **Register** to create the application.
+#### Register the uwpApp app (UWP-App-calling-MsGraph)
 
-   1. On the app Overview page, find the *Application (client) ID* value and record it for later. You'll need it to configure the Visual Studio configuration file for this project.
-
-   1. In the list of pages for the app, click on **Authentication** and, in the *Redirect URLs* | *Suggested Redirect URLs for public clients (mobile, desktop)* section, check **"urn:ietf:wg:oauth:2.0:oob**, then **Save**
+1. In the **App registrations (Preview)** page, select **New registration**.
+1. When the **Register an application page** appears, enter your application's registration information:
+   - In the **Name** section, enter a meaningful application name that will be displayed to users of the app, for example `UWP-App-calling-MsGraph`.
+   - In the **Supported account types** section, select **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**.
+    - Select **Register** to create the application.
+1. On the app **Overview** page, find the **Application (client) ID** value and record it for later. You'll need it to configure the Visual Studio configuration file for this project.
+1. In the list of pages for the app, select **Authentication**.
+   - In the **Redirect URLs** | **Suggested Redirect URLs for public clients (mobile, desktop)** section, check **urn:ietf:wg:oauth:2.0:oob**
+ 1. Select **Save**.
+1. Configure Permissions for your application. To that extent in the list of pages click on **API permissions**
+   - click the **Add a permission** button and then,
+   - Ensure that the **Microsoft APIs** tab is selected
+   - In the *Commonly used Microsoft APIs* section, click on **Microsoft Graph**
+   - In the **Delegated permissions** section, ensure that the right permissions are checked: **User.Read**. Use the search box if necessary.
 
    1. In the `App.xaml.cs` file from th cloned repo, set your application/client ID copied from the App Registration Portal where you will have registered an application and added the native platform.
 

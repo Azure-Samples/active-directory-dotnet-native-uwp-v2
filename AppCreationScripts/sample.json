@@ -15,7 +15,13 @@
     {
       "Id": "uwpApp",
       "Name": "UWP-App-calling-MsGraph",
-      "IsPublicClient": true
+      "Kind" :  "UWP",
+      "RequiredResourcesAccess": [
+        {
+          "Resource": "Microsoft Graph",
+          "DelegatedPermissions": [ "User.Read" ]
+        }
+      ]
     }
   ],
 
