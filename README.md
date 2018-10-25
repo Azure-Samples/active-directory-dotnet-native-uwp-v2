@@ -82,7 +82,7 @@ If sign-in with your work or school account and your organization requires condi
     No valid certificates found in the user's certificate store.
     Please try again choosing a different authentication method.
     ```
-- On Windows 10 desktop UWP application, if you enabled the settings described in [UWP specific considerations](#UWP-specific-considerations), the list of certificates is presented, however if you choose to use your PIN, the PIN window is never presented. This is a known limitation with Web authentication broker in UWP applications running on Windows 10 (this works fine on Windows Phone 10). As a work-around, you will need to click on the **sign-in with other options** link and then choose **Sign-in with a username and password instead**, provide your password and go through the phone authentication.
+- On Windows 10 desktop UWP application, if you enabled the settings described above, the list of certificates is presented, however if you choose to use your PIN, the PIN window is never presented. This is a known limitation with Web authentication broker in UWP applications running on Windows 10 (this works fine on Windows Phone 10). As a work-around, you will need to click on the **sign-in with other options** link and then choose **Sign-in with a username and password instead**, provide your password and go through the phone authentication.
 
 - we plan to remove this limitation in the future by integrating the Web Account Manager (WAM)
 
