@@ -98,11 +98,18 @@ namespace active_directory_dotnet_native_uwp_v2
             deferral.Complete();
         }
 
-        //Below is the clientId of your app registration. 
-        //You have to replace the below with the Application Id for your app registration
+        // Below are the clientId (Application Id) of your app registration and the tenant information. 
+        // You have to replace:
+        // - the content of ClientID with the Application Id for your app registration
+        // - Te content of Tenant by the information about the accounts allowed to sign-in in your application:
+        //   - For Work or School account in your org, use your tenant ID, or domain
+        //   - for any Work or School accounts, use organizations
+        //   - for any Work or School acounts, or Microsoft personal account, use common
+        //   - for Microsoft Personal account, use consumers
         private static string ClientId = "0b8b0665-bc13-4fdc-bd72-e0227b9fc011";
+        private static string Tenant = "common";
 
-        public static PublicClientApplication PublicClientApp { get; } = new PublicClientApplication(ClientId);
+        public static PublicClientApplication PublicClientApp { get; } = new PublicClientApplication(ClientId, $"https://login.microsoftonline.com/{Tenant}");
 
     }
 }
