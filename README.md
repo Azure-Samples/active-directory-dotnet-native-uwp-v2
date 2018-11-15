@@ -14,7 +14,14 @@ endpoint: AAD v2.0
 | [Getting Started](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-uwp)| [Library](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki) | [Docs](https://aka.ms/aadv2) | [Support](README.md#community-help-and-support)
 | --- | --- | --- | --- |
 
+## About this sample
+
+### Overview
+
 This simple sample demonstrates how to use the [Microsoft Authentication Library (MSAL) for .NET](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) to get an access token and call the Microsoft Graph (using OAuth 2.0 against the Azure AD v2.0 endpoint) for a Universal Windows Platform (UWP) application.
+
+1. The .Net client UWP application uses the MicroSoft Authentication Library (MSAL) to obtain a JWT access token from Azure Active Directory (Azure AD):
+2. The access token is used as a bearer token to authenticate the user when calling the Microsoft Graph.
 
 ![Topology](ReadmeFiles/Topology.png)
 
@@ -31,7 +38,7 @@ If you just want to quickly run it, use the following instructions:
    git clone https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2.git
    ```
 
-1. (Optionally) Register an Azure app and configure the code for the application 
+1. (Optionally) Register an Azure app and configure the code for the application
 
    If you want to register your own application:
 1. Sign in to the [Azure portal](https://portal.azure.com) using either a work or school account or a personal Microsoft account.
@@ -39,7 +46,7 @@ If you just want to quickly run it, use the following instructions:
    (using **Switch Directory**).
 1. In the left-hand navigation pane, select the **Azure Active Directory** service, and then select **App registrations (Preview)**.
 
-#### Register the uwpApp app (UWP-App-calling-MsGraph)
+### Register the uwpApp app (UWP-App-calling-MsGraph)
 
 1. In **App registrations (Preview)** page, select **New registration**.
 1. When the **Register an application page** appears, enter your application's registration information:
@@ -49,7 +56,7 @@ If you just want to quickly run it, use the following instructions:
 1. On the app **Overview** page, find the **Application (client) ID** value and record it for later. You'll need it to configure the Visual Studio configuration file for this project.
 1. In the list of pages for the app, select **Authentication**.
    - In the **Redirect URLs** | **Suggested Redirect URLs for public clients (mobile, desktop)** section, check **urn:ietf:wg:oauth:2.0:oob**
- 1. Select **Save**.
+1. Select **Save**.
 1. In the list of pages for the app, select **API permissions**
    - Click the **Add a permission** button and then,
    - Ensure that the **Microsoft APIs** tab is selected

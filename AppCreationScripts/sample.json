@@ -1,6 +1,6 @@
 {
   "Sample": {
-    "Title": "Calling Microsoft Graph from a Windows Universal Platform App (UWP) - Using MSAL.NET to get a token for Microsoft Graph",
+    "Title": "Universal Windows Platform application signing in users with Microsoft and calling the Microsoft Graph",
     "Level": 200,
     "Client": "UWP",
     "Service": "Microsoft Graph",
@@ -14,7 +14,7 @@
   "AADApps": [
     {
       "Id": "uwpApp",
-      "Name": "UWP-App-calling-MsGraph",
+      "Name": "UWP-App-calling-MSGraph",
       "Kind" :  "UWP",
       "RequiredResourcesAccess": [
         {
