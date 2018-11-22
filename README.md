@@ -18,7 +18,7 @@ endpoint: AAD v2.0
 
 ### Overview
 
-This simple sample demonstrates how to use the [Microsoft Authentication Library (MSAL) for .NET](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) to get an access token and call the Microsoft Graph (using OAuth 2.0 against the Azure AD v2.0 endpoint) for a Universal Windows Platform (UWP) application.
+This simple sample demonstrates how to use the [Microsoft Authentication Library (MSAL) for .NET](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) to get an access token and call the Microsoft Graph (using OAuth 2.0 against the Azure AD v2.0 endpoint) from a Universal Windows Platform (UWP) application.
 
 1. The .Net client UWP application uses the MicroSoft Authentication Library (MSAL) to obtain a JWT access token from Azure Active Directory (Azure AD):
 2. The access token is used as a bearer token to authenticate the user when calling the Microsoft Graph.
@@ -30,27 +30,52 @@ This simple sample demonstrates how to use the [Microsoft Authentication Library
 You can get full explanation about this sample, and build it from scratch by going to [Call the Microsoft Graph API from a Universal Windows Platform (UWP) application](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-uwp).
 You would have to change a few things (see below, build from scratch)
 
-If you just want to quickly run it, use the following instructions:
+## How to run this sample
 
-1. Clone the code.
+To run this sample, you'll need:
+
+- [Visual Studio 2017](https://aka.ms/vsdownload)
+- An Internet connection
+- An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/en-us/documentation/articles/active-directory-howto-tenant/)
+- A user account in your Azure AD tenant. This sample will not work with a Microsoft account (formerly Windows Live account). Therefore, if you signed in to the [Azure portal](https://portal.azure.com) with a Microsoft account and have never created a user account in your directory before, you need to do that now.
+
+### Step 1:  Clone or download this repository
+
+From your shell or command line:
 
    ```Shell
    git clone https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2.git
    ```
 
-1. (Optionally) Register an Azure app and configure the code for the application
+or download and exact the repository .zip file.
 
-   If you want to register your own application:
+> Given that the name of the sample is pretty long, and so are the name of the referenced NuGet packages, you might want to clone it in a folder close to the root of your hard drive, to avoid file size limitations on Windows.
+
+### Step 2:  Register the sample with your Azure Active Directory tenant
+
+There is one project in this sample. To register it, you can:
+
+- either follow the steps in the paragraphs below ([Step 2](#step-2--register-the-sample-with-your-azure-active-directory-tenant) and [Step 3](#step-3--configure-the-sample-to-use-your-azure-ad-tenant))
+- or use PowerShell scripts that:
+  - **automatically** create for you the Azure AD applications and related objects (passwords, permissions, dependencies)
+  - modify the Visual Studio projects' configuration files.
+
+If you want to use this automation, read the instructions in [App Creation Scripts](./AppCreationScripts/AppCreationScripts.md)
+
+#### Choose the Azure AD tenant where you want to create your applications
+
+As a first step you'll need to:
+
 1. Sign in to the [Azure portal](https://portal.azure.com) using either a work or school account or a personal Microsoft account.
 1. If your account gives you access to more than one tenant, select your account in the top right corner, and set your portal session to the desired Azure AD tenant
    (using **Switch Directory**).
 1. In the left-hand navigation pane, select the **Azure Active Directory** service, and then select **App registrations (Preview)**.
 
-### Register the uwpApp app (UWP-App-calling-MsGraph)
+#### Register the uwpApp app (UWP-App-calling-MSGraph)
 
 1. In **App registrations (Preview)** page, select **New registration**.
 1. When the **Register an application page** appears, enter your application's registration information:
-   - In the **Name** section, enter a meaningful application name that will be displayed to users of the app, for example `UWP-App-calling-MsGraph`.
+   - In the **Name** section, enter a meaningful application name that will be displayed to users of the app, for example `UWP-App-calling-MSGraph`.
    - In the **Supported account types** section, select **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**.
    - Select **Register** to create the application.
 1. On the app **Overview** page, find the **Application (client) ID** value and record it for later. You'll need it to configure the Visual Studio configuration file for this project.
@@ -63,6 +88,13 @@ If you just want to quickly run it, use the following instructions:
    - In the *Commonly used Microsoft APIs* section, click on **Microsoft Graph**
    - In the **Delegated permissions** section, ensure that the right permissions are checked: **User.Read**. Use the search box if necessary.
    - Select the **Add permissions** button
+
+
+### Step 3:  Configure the sample to use your Azure AD tenant
+
+In the steps below, "ClientID" is the same as "Application ID" or "AppId".
+
+Open the solution in Visual Studio to configure the projects
 
 #### Configure the sample to use your Azure AD app
 
@@ -80,6 +112,7 @@ If you just want to quickly run it, use the following instructions:
         - Shared User Certificates
     Also, in the constructor of the `App` in `App.xaml.cs`, add the following line of code: ```App.PublicClientApp.UseCorporateNetwork = true;```
 
+### Step 4: Run the sample
 1. Run the application from Visual Studio (Debug | Start without Debugging), directly on the local machine, or after deploying to a device or an emulator.
 
 ### Known limitation: on Windows 10, you cannot sign in with your windows hello PIN
