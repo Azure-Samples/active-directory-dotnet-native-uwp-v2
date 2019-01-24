@@ -1,7 +1,10 @@
 ﻿using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.AppConfig;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,9 +24,34 @@ namespace active_directory_dotnet_native_uwp_v2
         //Set the scope for API call to user.read
         string[] scopes = new string[] { "user.read" };
 
+        // Below are the clientId (Application Id) of your app registration and the tenant information. 
+        // You have to replace:
+        // - the content of ClientID with the Application Id for your app registration
+        // - Te content of Tenant by the information about the accounts allowed to sign-in in your application:
+        //   - For Work or School account in your org, use your tenant ID, or domain
+        //   - for any Work or School accounts, use organizations
+        //   - for any Work or School accounts, or Microsoft personal account, use common
+        //   - for Microsoft Personal account, use consumers
+        private const string ClientId = "0b8b0665-bc13-4fdc-bd72-e0227b9fc011";
+        private const string Tenant = "common";
+
+        public IPublicClientApplication PublicClientApp { get; } 
+
         public MainPage()
         {
             this.InitializeComponent();
+
+
+            PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
+                .WithAadAuthority(AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount)                
+                .WithLoggingCallback((level, message, containsPii) =>
+                {
+                    Debug.WriteLine($"MSAL: {level} {message} ");
+                })
+                .WithEnablePiiLogging(false)  // enable PII logging to get more detailed logs when debugging issues but don't post the logs on GitHub! 
+                .WithLoggingLevel(LogLevel.Warning) // set it to Verbose when debugging issues
+                .Build();
+                
         }
 
         /// <summary>
@@ -36,12 +64,12 @@ namespace active_directory_dotnet_native_uwp_v2
             TokenInfoText.Text = string.Empty;
 
             // It's good practice to not do work on the UI thread, so use ConfigureAwait(false) whenever possible.            
-            IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync().ConfigureAwait(false); 
+            IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false); 
             IAccount firstAccount = accounts.FirstOrDefault();
 
             try
             {
-                authResult = await App.PublicClientApp.AcquireTokenSilentAsync(scopes, firstAccount);
+                authResult = await PublicClientApp.AcquireTokenSilentAsync(scopes, firstAccount);
             }
             catch (MsalUiRequiredException ex)
             {
@@ -50,7 +78,7 @@ namespace active_directory_dotnet_native_uwp_v2
 
                 try
                 {
-                    authResult = await App.PublicClientApp.AcquireTokenAsync(scopes).ConfigureAwait(false);
+                    authResult = await PublicClientApp.AcquireTokenAsync(scopes).ConfigureAwait(false);
                 }
                 catch (MsalException msalex)
                 {
@@ -107,12 +135,12 @@ namespace active_directory_dotnet_native_uwp_v2
         /// </summary>
         private async void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
-            IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
+            IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
             IAccount firstAccount = accounts.FirstOrDefault();
 
             try
             {
-                await App.PublicClientApp.RemoveAsync(firstAccount).ConfigureAwait(false);
+                await PublicClientApp.RemoveAsync(firstAccount).ConfigureAwait(false);
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
                     ResultText.Text = "User has signed-out";
