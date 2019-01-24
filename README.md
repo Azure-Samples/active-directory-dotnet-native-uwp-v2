@@ -100,7 +100,7 @@ Open the solution in Visual Studio to configure the projects
 
    1. In the `App.xaml.cs` file from th cloned repo, set your application/client ID copied from the App Registration Portal where you will have registered an application and added the native platform.
 
-      ``private static string ClientId = "[Application Id pasted from the application registration portal]"``
+      ``private const string ClientId = "[Application Id pasted from the application registration portal]"``
 
 1. (Optionally): Enable Windows Integrated Authentication when using a federated Azure AD tenant
 

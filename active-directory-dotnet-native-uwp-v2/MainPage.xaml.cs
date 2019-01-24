@@ -21,6 +21,18 @@ namespace active_directory_dotnet_native_uwp_v2
         //Set the scope for API call to user.read
         string[] scopes = new string[] { "user.read" };
 
+        // Below are the clientId (Application Id) of your app registration and the tenant information. 
+        // You have to replace:
+        // - the content of ClientID with the Application Id for your app registration
+        // - Te content of Tenant by the information about the accounts allowed to sign-in in your application:
+        //   - For Work or School account in your org, use your tenant ID, or domain
+        //   - for any Work or School accounts, use organizations
+        //   - for any Work or School accounts, or Microsoft personal account, use common
+        //   - for Microsoft Personal account, use consumers
+        private static string ClientId = "0b8b0665-bc13-4fdc-bd72-e0227b9fc011";
+        private static string Tenant = "common";
+
+        public static PublicClientApplication PublicClientApp { get; } = new PublicClientApplication(ClientId, $"https://login.microsoftonline.com/{Tenant}");
 
         public MainPage()
         {
@@ -36,7 +48,8 @@ namespace active_directory_dotnet_native_uwp_v2
             ResultText.Text = string.Empty;
             TokenInfoText.Text = string.Empty;
 
-            IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync();
+            // It's good practice to not do work on the UI thread, so use ConfigureAwait(false) whenever possible.            
+            IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync().ConfigureAwait(false); 
             IAccount firstAccount = accounts.FirstOrDefault();
 
             try
@@ -50,24 +63,30 @@ namespace active_directory_dotnet_native_uwp_v2
 
                 try
                 {
-                    authResult = await App.PublicClientApp.AcquireTokenAsync(scopes);
+                    authResult = await App.PublicClientApp.AcquireTokenAsync(scopes).ConfigureAwait(false);
                 }
                 catch (MsalException msalex)
                 {
-                    ResultText.Text = $"Error Acquiring Token:{System.Environment.NewLine}{msalex}";
+                    await DisplayMessageAsync($"Error Acquiring Token:{System.Environment.NewLine}{msalex}");
                 }
             }
             catch (Exception ex)
             {
-                ResultText.Text = $"Error Acquiring Token Silently:{System.Environment.NewLine}{ex}";
+                await DisplayMessageAsync($"Error Acquiring Token Silently:{System.Environment.NewLine}{ex}");
                 return;
             }
 
             if (authResult != null)
             {
-                ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, authResult.AccessToken);
-                DisplayBasicTokenInfo(authResult);
-                this.SignOutButton.Visibility = Visibility.Visible;
+                var content = await GetHttpContentWithToken(graphAPIEndpoint, authResult.AccessToken).ConfigureAwait(false);
+
+                // Go back to the UI thread to make changes to the UI
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    ResultText.Text = content;
+                    DisplayBasicTokenInfo(authResult);
+                    this.SignOutButton.Visibility = Visibility.Visible;
+                });
             }
         }
 
@@ -77,7 +96,7 @@ namespace active_directory_dotnet_native_uwp_v2
         /// <param name="url">The URL</param>
         /// <param name="token">The token</param>
         /// <returns>String containing the results of the GET operation</returns>
-        public async Task<string> GetHttpContentWithToken(string url, string token)
+        private async Task<string> GetHttpContentWithToken(string url, string token)
         {
             var httpClient = new System.Net.Http.HttpClient();
             System.Net.Http.HttpResponseMessage response;
@@ -86,8 +105,8 @@ namespace active_directory_dotnet_native_uwp_v2
                 var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
                 //Add the token in Authorization header
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                response = await httpClient.SendAsync(request);
-                var content = await response.Content.ReadAsStringAsync();
+                response = await httpClient.SendAsync(request).ConfigureAwait(false);
+                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return content;
             }
             catch (Exception ex)
@@ -101,23 +120,27 @@ namespace active_directory_dotnet_native_uwp_v2
         /// </summary>
         private async void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
-            IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync();
+            IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
             IAccount firstAccount = accounts.FirstOrDefault();
-                try
+
+            try
+            {
+                await App.PublicClientApp.RemoveAsync(firstAccount).ConfigureAwait(false);
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    await App.PublicClientApp.RemoveAsync(firstAccount);
-                    this.ResultText.Text = "User has signed-out";
+                    ResultText.Text = "User has signed-out";
                     this.CallGraphButton.Visibility = Visibility.Visible;
                     this.SignOutButton.Visibility = Visibility.Collapsed;
-                }
-                catch (MsalException ex)
-                {
-                    ResultText.Text = $"Error signing-out user: {ex.Message}";
-                }
+                });
+            }
+            catch (MsalException ex)
+            {
+                ResultText.Text = $"Error signing-out user: {ex.Message}";
+            }
         }
 
         /// <summary>
-        /// Display basic information contained in the token
+        /// Display basic information contained in the token. Needs to be called from the UI thead.
         /// </summary>
         private void DisplayBasicTokenInfo(AuthenticationResult authResult)
         {
@@ -128,6 +151,18 @@ namespace active_directory_dotnet_native_uwp_v2
                 TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
                 TokenInfoText.Text += $"Access Token: {authResult.AccessToken}" + Environment.NewLine;
             }
+        }
+
+        /// <summary>
+        /// Displays a message in the ResultText. Can be called from any thread.
+        /// </summary>
+        private async Task DisplayMessageAsync(string message)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                   () =>
+                   {
+                       ResultText.Text = message;
+                   });
         }
     }
 }
