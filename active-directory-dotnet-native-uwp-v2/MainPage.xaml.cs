@@ -32,8 +32,7 @@ namespace active_directory_dotnet_native_uwp_v2
         //   - for any Work or School accounts, use organizations
         //   - for any Work or School accounts, or Microsoft personal account, use common
         //   - for Microsoft Personal account, use consumers
-        private const string ClientId = "0b8b0665-bc13-4fdc-bd72-e0227b9fc011";
-        private const string Tenant = "common";
+        private const string ClientId = "0b8b0665-bc13-4fdc-bd72-e0227b9fc011";        
 
         public IPublicClientApplication PublicClientApp { get; } 
 
@@ -49,8 +48,10 @@ namespace active_directory_dotnet_native_uwp_v2
                     Debug.WriteLine($"MSAL: {level} {message} ");
                 })
                 .WithEnablePiiLogging(false)  // enable PII logging to get more detailed logs when debugging issues but don't post the logs on GitHub! 
-                .WithLoggingLevel(LogLevel.Warning) // set it to Verbose when debugging issues
+                .WithLoggingLevel(LogLevel.Warning) // set it to Verbose when debugging issues                
                 .Build();
+
+            PublicClientApp.UseCorporateNetwork = false;
                 
         }
 

@@ -98,7 +98,7 @@ Open the solution in Visual Studio to configure the projects
 
 #### Configure the sample to use your Azure AD app
 
-   1. In the `App.xaml.cs` file from th cloned repo, set your application/client ID copied from the App Registration Portal where you will have registered an application and added the native platform.
+   1. In the `MainPage.xaml.cs` file from th cloned repo, set your application/client ID copied from the App Registration Portal where you will have registered an application and added the native platform.
 
       ``private const string ClientId = "[Application Id pasted from the application registration portal]"``
 
@@ -110,7 +110,7 @@ Open the solution in Visual Studio to configure the projects
         - Enterprise Authentication
         - Private Networks (Client & Server)
         - Shared User Certificates
-    Also, in the constructor of the `App` in `App.xaml.cs`, add the following line of code: ```App.PublicClientApp.UseCorporateNetwork = true;```
+    Also, `MainPage.xaml.cs`, add the following line of code: ```PublicClientApp.UseCorporateNetwork = true;```
 
 ### Step 4: Run the sample
 1. Run the application from Visual Studio (Debug | Start without Debugging), directly on the local machine, or after deploying to a device or an emulator.
