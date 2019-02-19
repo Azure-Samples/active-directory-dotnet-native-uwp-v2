@@ -96,8 +96,8 @@ namespace active_directory_dotnet_native_uwp_v2
         //   - for any Work or School accounts, use organizations
         //   - for any Work or School accounts, or Microsoft personal account, use common
         //   - for Microsoft Personal account, use consumers
-        private const string ClientId = "0b8b0665-bc13-4fdc-bd72-e0227b9fc011";
-        private const string Tenant = "common";
+        private static string ClientId = "0b8b0665-bc13-4fdc-bd72-e0227b9fc011";
+        private static string Tenant = "common";
 
         public static PublicClientApplication PublicClientApp { get; } = new PublicClientApplication(ClientId, $"https://login.microsoftonline.com/{Tenant}");
 
