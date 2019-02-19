@@ -158,9 +158,16 @@ Function ConfigureApplications
                                                   -AvailableToOtherTenants $True `
                                                   -PublicClient $True
 
-
    $currentAppId = $uwpAppAadApplication.AppId
    $uwpAppServicePrincipal = New-AzureADServicePrincipal -AppId $currentAppId -Tags {WindowsAzureActiveDirectoryIntegratedApp}
+
+   # add the user running the script as an app owner if needed
+   $owner = Get-AzureADApplicationOwner -ObjectId $uwpAppAadApplication.ObjectId
+   if ($owner -eq $null)
+   { 
+    Add-AzureADApplicationOwner -ObjectId $uwpAppAadApplication.ObjectId -RefObjectId $user.ObjectId
+    Write-Host "'$($user.UserPrincipalName)' added as an application owner to app '$($uwpAppServicePrincipal.DisplayName)'"
+   }
 
    Write-Host "Done creating the uwpApp application (UWP-App-calling-MSGraph)"
 
@@ -191,6 +198,11 @@ Function ConfigureApplications
    Add-Content -Value "</tbody></table></body></html>" -Path createdApps.html  
 }
 
+# Pre-requisites
+if ((Get-Module -ListAvailable -Name "AzureAD") -eq $null) { 
+    Install-Module "AzureAD" -Scope CurrentUser 
+} 
+Import-Module AzureAD
 
 # Run interactively (will ask you for the tenant ID)
 ConfigureApplications -Credential $Credential -tenantId $TenantId
