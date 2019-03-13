@@ -87,8 +87,5 @@ namespace active_directory_dotnet_native_uwp_v2
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
-
-        
-
     }
 }

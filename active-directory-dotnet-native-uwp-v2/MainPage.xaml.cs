@@ -42,17 +42,13 @@ namespace active_directory_dotnet_native_uwp_v2
 
 
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
-                .WithAadAuthority(AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount)                
-                .WithLoggingCallback((level, message, containsPii) =>
+                .WithAuthority(AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount)
+                .WithLogging((level, message, containsPii) =>
                 {
                     Debug.WriteLine($"MSAL: {level} {message} ");
-                })
-                .WithEnablePiiLogging(false)  // enable PII logging to get more detailed logs when debugging issues but don't post the logs on GitHub! 
-                .WithLoggingLevel(LogLevel.Warning) // set it to Verbose when debugging issues                
-                .Build();
-
-            PublicClientApp.UseCorporateNetwork = false;
-                
+                }, LogLevel.Warning, enablePiiLogging:false,enableDefaultPlatformLogging:true)
+                .WithUseCorporateNetwork(true)
+                .Build();                
         }
 
         /// <summary>
