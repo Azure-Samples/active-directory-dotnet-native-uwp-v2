@@ -66,7 +66,8 @@ namespace active_directory_dotnet_native_uwp_v2
 
             try
             {
-                authResult = await PublicClientApp.AcquireTokenSilentAsync(scopes, firstAccount);
+                authResult = await PublicClientApp.AcquireTokenSilent(scopes, firstAccount)
+                                                  .ExecuteAsync();
             }
             catch (MsalUiRequiredException ex)
             {
@@ -75,7 +76,9 @@ namespace active_directory_dotnet_native_uwp_v2
 
                 try
                 {
-                    authResult = await PublicClientApp.AcquireTokenAsync(scopes).ConfigureAwait(false);
+                    authResult = await PublicClientApp.AcquireTokenInteractive(scopes, this)
+                                                      .ExecuteAsync()
+                                                      .ConfigureAwait(false);
                 }
                 catch (MsalException msalex)
                 {
@@ -161,7 +164,6 @@ namespace active_directory_dotnet_native_uwp_v2
             {
                 TokenInfoText.Text += $"User Name: {authResult.Account.Username}" + Environment.NewLine;
                 TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
-                TokenInfoText.Text += $"Access Token: {authResult.AccessToken}" + Environment.NewLine;
             }
         }
 
