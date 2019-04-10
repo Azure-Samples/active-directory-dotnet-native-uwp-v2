@@ -86,8 +86,8 @@ As a first step you'll need to:
 
 #### Register the uwpApp app (UWP-App-calling-MSGraph)
 
-1. In **App registrations (Preview)** page, select **New registration**.
-1. When the **Register an application page** appears, enter your application's registration information:
+1. Navigate to the Microsoft identity platform for developers [App registrations](https://go.microsoft.com/fwlink/?linkid=2083908) page.
+1. Select **New registration**.
    - In the **Name** section, enter a meaningful application name that will be displayed to users of the app, for example `UWP-App-calling-MSGraph`.
    - In the **Supported account types** section, select **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**.
    - Select **Register** to create the application.
