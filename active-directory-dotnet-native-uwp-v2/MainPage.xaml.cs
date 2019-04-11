@@ -75,7 +75,7 @@ namespace active_directory_dotnet_native_uwp_v2
 
                 try
                 {
-                    authResult = await PublicClientApp.AcquireTokenInteractive(scopes, this)
+                    authResult = await PublicClientApp.AcquireTokenInteractive(scopes)
                                                       .ExecuteAsync()
                                                       .ConfigureAwait(false);
                 }
