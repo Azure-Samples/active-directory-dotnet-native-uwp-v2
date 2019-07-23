@@ -1,12 +1,17 @@
 ---
-services: active-directory
-platforms: dotnet
-author: jmprieur
-level: 200
-client: UWP 
-service: Microsoft Graph
-endpoint: AAD v2.0
+languages:
+- csharp
+- powershell
+page_type: sample
+description: "This sample shows how to use the Microsoft Authentication Library for .NET to get an access token and call the Microsoft Graph from a UWP app."
+products:
+- azure
+- azure-active-directory
+- windows
+- windows-uwp
+urlFragment: uwp-signing-in-graph-aad
 ---
+
 # Universal Windows Platform application signing in users with Microsoft and calling the Microsoft Graph
 
 ![Build badge](https://identitydivision.visualstudio.com/_apis/public/build/definitions/a7934fdd-dcde-4492-a406-7fad6ac00e17/485/badge)
