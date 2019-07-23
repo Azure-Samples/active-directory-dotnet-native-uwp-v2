@@ -25,7 +25,7 @@ urlFragment: uwp-signing-in-graph-aad
 
 This simple sample demonstrates how to use the [Microsoft Authentication Library (MSAL) for .NET](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) to get an access token and call the Microsoft Graph (using OAuth 2.0 against the Azure AD v2.0 endpoint) from a Universal Windows Platform (UWP) application.
 
-1. The .Net client UWP application uses the MicroSoft Authentication Library (MSAL) to obtain a JWT access token from Azure Active Directory (Azure AD):
+1. The .NET client UWP application uses the Microsoft Authentication Library (MSAL) to obtain a JWT access token from Azure Active Directory (Azure AD):
 2. The access token is used as a bearer token to authenticate the user when calling the Microsoft Graph.
 
 ![Topology](ReadmeFiles/Topology.png)
