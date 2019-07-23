@@ -9,6 +9,7 @@ products:
 - azure-active-directory
 - windows
 - windows-uwp
+- office-ms-graph
 urlFragment: uwp-signing-in-graph-aad
 ---
 
