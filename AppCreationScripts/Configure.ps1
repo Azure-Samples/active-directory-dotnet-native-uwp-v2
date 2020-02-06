@@ -154,7 +154,7 @@ Function ConfigureApplications
    # Create the uwpApp AAD application
    Write-Host "Creating the AAD application (UWP-App-calling-MSGraph)"
    $uwpAppAadApplication = New-AzureADApplication -DisplayName "UWP-App-calling-MSGraph" `
-                                                  -ReplyUrls "urn:ietf:wg:oauth:2.0:oob" `
+                                                  -ReplyUrls "https://login.microsoftonline.com/common/oauth2/nativeclient" `
                                                   -AvailableToOtherTenants $True `
                                                   -PublicClient $True
 

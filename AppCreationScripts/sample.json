@@ -15,7 +15,8 @@
     {
       "Id": "uwpApp",
       "Name": "UWP-App-calling-MSGraph",
-      "Kind" :  "UWP",
+      "Kind": "UWP",
+      "RedirectUri": "https://login.microsoftonline.com/common/oauth2/nativeclient",
       "RequiredResourcesAccess": [
         {
           "Resource": "Microsoft Graph",
