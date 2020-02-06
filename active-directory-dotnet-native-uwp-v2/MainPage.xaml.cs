@@ -18,7 +18,7 @@ namespace active_directory_dotnet_native_uwp_v2
     public sealed partial class MainPage : Page
     {
         //Set the API Endpoint to Graph 'me' endpoint
-        string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
+        readonly string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
 
         //Set the scope for API call to user.read
         string[] scopes = new string[] { "user.read" };
@@ -31,7 +31,7 @@ namespace active_directory_dotnet_native_uwp_v2
         //   - for any Work or School accounts, use organizations
         //   - for any Work or School accounts, or Microsoft personal account, use common
         //   - for Microsoft Personal account, use consumers
-        private const string ClientId = "0b8b0665-bc13-4fdc-bd72-e0227b9fc011";        
+        private const string ClientId = "4a1aa1d5-c567-49d0-ad0b-cd957a47f842";        
 
         public IPublicClientApplication PublicClientApp { get; } 
 
@@ -40,13 +40,15 @@ namespace active_directory_dotnet_native_uwp_v2
             this.InitializeComponent();
 
 
+            // To change from Microsoft public cloud to a national cloud, use another value of AzureCloudInstance
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
-                .WithAuthority(AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount)
+                .WithAuthority(AzureCloudInstance.AzurePublic, AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount)
                 .WithLogging((level, message, containsPii) =>
                 {
                     Debug.WriteLine($"MSAL: {level} {message} ");
-                }, LogLevel.Warning, enablePiiLogging:false,enableDefaultPlatformLogging:true)
+                }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
                 .WithUseCorporateNetwork(true)
+                .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
                 .Build();                
         }
 
