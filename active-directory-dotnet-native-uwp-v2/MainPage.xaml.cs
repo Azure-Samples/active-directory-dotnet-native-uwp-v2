@@ -42,7 +42,7 @@ namespace active_directory_dotnet_native_uwp_v2
 
             // To change from Microsoft public cloud to a national cloud, use another value of AzureCloudInstance
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
-                .WithAuthority(AzureCloudInstance.AzurePublic, AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount)
+                .WithAuthority("https://login.microsoftonline.com/common")
                 .WithLogging((level, message, containsPii) =>
                 {
                     Debug.WriteLine($"MSAL: {level} {message} ");
