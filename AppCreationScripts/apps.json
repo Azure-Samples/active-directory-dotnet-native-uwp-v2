@@ -34,10 +34,13 @@
       ],
       "codeConfigurations": [	
         {
-		      "settingFile": "/active-directory-dotnet-native-uwp-v2/MainPage.xaml.cs", 
-		      "replaceTokens": {
-             "appId": "0b8b0665-bc13-4fdc-bd72-e0227b9fc011"
-			    }
+		      "settingFile": "/active-directory-dotnet-native-uwp-v2/MainPage.xaml.cs",
+          "replaceTokens": {
+            "appId": "4a1aa1d5-c567-49d0-ad0b-cd957a47f842",
+            "tenantId": "common",
+            "msgraphEndpointHost": "https://www.graph.microsoft.com/",
+            "authorityEndpointHost": "https://login.microsoftonline.com/"
+          }
         }
       ]	
     }
