@@ -1,9 +1,5 @@
 {
-  /*
-  This section describes the Azure AD  Applications to configure, and their dependencies
-  */
-
-  "Sample": {
+    "Sample": {
     "Title": "Calling Microsoft Graph from a Windows Universal Platform App (UWP)",
     "Level": 200,
     "Client": "UWP, MSAL.NET"
