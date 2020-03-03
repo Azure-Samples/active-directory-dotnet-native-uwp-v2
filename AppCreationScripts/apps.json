@@ -34,7 +34,7 @@
           "replaceTokens": {
             "appId": "4a1aa1d5-c567-49d0-ad0b-cd957a47f842",
             "tenantId": "common",
-            "msgraphEndpointHost": "https://www.graph.microsoft.com/",
+            "msgraphEndpointHost": "https://graph.microsoft.com/",
             "authorityEndpointHost": "https://login.microsoftonline.com/"
           }
         }
