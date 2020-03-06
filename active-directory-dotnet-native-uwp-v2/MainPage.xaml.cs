@@ -48,7 +48,7 @@ namespace active_directory_dotnet_native_uwp_v2
                     Debug.WriteLine($"MSAL: {level} {message} ");
                 }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
                 .WithUseCorporateNetwork(true)
-                .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+                .WithRedirectUri(Constant.PublicClientRedirectUri)
                 .Build();                
         }
 
