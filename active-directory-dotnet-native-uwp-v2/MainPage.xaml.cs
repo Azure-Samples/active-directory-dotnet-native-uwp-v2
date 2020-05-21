@@ -1,9 +1,11 @@
-﻿using Microsoft.Identity.Client;
+﻿using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,21 +20,19 @@ namespace active_directory_dotnet_native_uwp_v2
     public sealed partial class MainPage : Page
     {
         //Set the API Endpoint to Graph 'me' endpoint
-        readonly string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
-
+      
         //Set the scope for API call to user.read
         string[] scopes = new string[] { "user.read" };
 
         // Below are the clientId (Application Id) of your app registration and the tenant information. 
         // You have to replace:
         // - the content of ClientID with the Application Id for your app registration
-        // - Te content of Tenant by the information about the accounts allowed to sign-in in your application:
+        // - The content of Tenant by the information about the accounts allowed to sign-in in your application:
         //   - For Work or School account in your org, use your tenant ID, or domain
         //   - for any Work or School accounts, use organizations
         //   - for any Work or School accounts, or Microsoft personal account, use common
         //   - for Microsoft Personal account, use consumers
-        private const string ClientId = "4a1aa1d5-c567-49d0-ad0b-cd957a47f842";        
-
+        private const string ClientId = "[Enter client ID of the app as obtained from Azure Portal, e.g. 4a1aa1d5-c567-49d0-ad0b-cd957a47f842]";
         public IPublicClientApplication PublicClientApp { get; } 
 
         public MainPage()
@@ -47,7 +47,7 @@ namespace active_directory_dotnet_native_uwp_v2
                 {
                     Debug.WriteLine($"MSAL: {level} {message} ");
                 }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
-                .WithUseCorporateNetwork(true)
+                .WithUseCorporateNetwork(false)
                 .WithRedirectUri(Constant.PublicClientRedirectUri)
                 .Build();                
         }
@@ -62,7 +62,7 @@ namespace active_directory_dotnet_native_uwp_v2
             TokenInfoText.Text = string.Empty;
 
             // It's good practice to not do work on the UI thread, so use ConfigureAwait(false) whenever possible.            
-            IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false); 
+            IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
             IAccount firstAccount = accounts.FirstOrDefault();
 
             try
@@ -94,12 +94,16 @@ namespace active_directory_dotnet_native_uwp_v2
 
             if (authResult != null)
             {
-                var content = await GetHttpContentWithToken(graphAPIEndpoint, authResult.AccessToken).ConfigureAwait(false);
+                var graphServiceClient = GetGraphServiceClient(authResult.AccessToken);
+                
+                User graphUser = await graphServiceClient.Me.Request().GetAsync();
 
                 // Go back to the UI thread to make changes to the UI
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    ResultText.Text = content;
+                    ResultText.Text = "@odata.context: " + graphUser.AdditionalData["@odata.context"] + "\nBusiness Phone: " + graphUser.BusinessPhones.FirstOrDefault()
+                                      + "\nDisplay Name: " + graphUser.DisplayName + "\nGiven Name: " + graphUser.GivenName + "\nid: " + graphUser.Id
+                                      + "\nUser Principal Name: " + graphUser.UserPrincipalName;
                     DisplayBasicTokenInfo(authResult);
                     this.SignOutButton.Visibility = Visibility.Visible;
                 });
@@ -107,28 +111,18 @@ namespace active_directory_dotnet_native_uwp_v2
         }
 
         /// <summary>
-        /// Perform an HTTP GET request to a URL using an HTTP Authorization header
+        /// Instantiating GraphServiceClient using the access token.
         /// </summary>
-        /// <param name="url">The URL</param>
         /// <param name="token">The token</param>
-        /// <returns>String containing the results of the GET operation</returns>
-        private async Task<string> GetHttpContentWithToken(string url, string token)
+        /// <returns>GraphServiceClient</returns>
+        private GraphServiceClient GetGraphServiceClient(string token)
         {
-            var httpClient = new System.Net.Http.HttpClient();
-            System.Net.Http.HttpResponseMessage response;
-            try
+            GraphServiceClient graphServiceClient = new GraphServiceClient(new DelegateAuthenticationProvider((requestMessage) =>
             {
-                var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
-                //Add the token in Authorization header
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                response = await httpClient.SendAsync(request).ConfigureAwait(false);
-                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return content;
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
-            }
+                requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                return Task.FromResult(0);
+            }));
+            return graphServiceClient;
         }
 
         /// <summary>
