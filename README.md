@@ -29,6 +29,8 @@ This simple sample demonstrates how to use the [Microsoft Authentication Library
 1. The .NET client UWP application uses the Microsoft Authentication Library (MSAL) to obtain a JWT access token from Azure Active Directory (Azure AD):
 2. The access token is used as a bearer token to authenticate the user when calling the Microsoft Graph.
 
+> Looking for previous versions of this code sample? Check out the tags on the [releases](../../releases) GitHub page.
+
 ![Topology](ReadmeFiles/Topology.png)
 
 ## Steps to run
@@ -40,9 +42,9 @@ You would have to change a few things (see below, build from scratch)
 
 To run this sample, you'll need:
 
-- [Visual Studio 2017](https://aka.ms/vsdownload)
+- [Visual Studio 2019](https://aka.ms/vsdownload)
 - An Internet connection
-- An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/en-us/documentation/articles/active-directory-howto-tenant/)
+- An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/documentation/articles/active-directory-howto-tenant/)
 - A user account in your Azure AD tenant or a Microsoft account (formerly Windows Live account). Therefore, if you signed in to the [Azure portal](https://portal.azure.com) with a Microsoft account and have never created a user account in your directory before, you need to do that now.
 
 ### Step 1:  Clone or download this repository
@@ -53,9 +55,9 @@ From your shell or command line:
    git clone https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2.git
    ```
 
-or download and exact the repository .zip file.
+or download and extract the repository .zip file.
 
-> Given that the name of the sample is pretty long, and so are the name of the referenced NuGet packages, you might want to clone it in a folder close to the root of your hard drive, to avoid file size limitations on Windows.
+> Given that the name of the sample is quiet long, and so are the names of the referenced NuGet packages, you might want to clone it in a folder close to the root of your hard drive, to avoid the 256 character path length limitation on Windows.
 
 ### Step 2:  Register the sample application with your Azure Active Directory tenant
 
@@ -63,62 +65,73 @@ There is one project in this sample. To register it, you can:
 
 - either follow the steps [Step 2: Register the sample with your Azure Active Directory tenant](#step-2-register-the-sample-with-your-azure-active-directory-tenant) and [Step 3:  Configure the sample to use your Azure AD tenant](#choose-the-azure-ad-tenant-where-you-want-to-create-your-applications)
 - or use PowerShell scripts that:
-  - **automatically** creates the Azure AD applications and related objects (passwords, permissions, dependencies) for you
+  - **automatically** creates the Azure AD applications and related objects (passwords, permissions, dependencies) for you. Note that this works for Visual Studio only.
   - modify the Visual Studio projects' configuration files.
 
-If you want to use this automation:
-1. On Windows run PowerShell and navigate to the root of the cloned directory
+<details>
+  <summary>Expand this section if you want to use this automation:</summary>
+
+1. On Windows, run PowerShell and navigate to the root of the cloned directory
 1. In PowerShell run:
+
    ```PowerShell
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
    ```
-1. Run the script to create your Azure AD application and configure the code of the sample application accordinly. 
+
+1. Run the script to create your Azure AD application and configure the code of the sample application accordingly.
+1. In PowerShell run:
+
    ```PowerShell
-   .\AppCreationScripts\Configure.ps1
+   cd .\AppCreationScripts\
+   .\Configure.ps1
    ```
+
    > Other ways of running the scripts are described in [App Creation Scripts](./AppCreationScripts/AppCreationScripts.md)
+   > The scripts also provide a guide to automated application registration, configuration and removal which can help in your CI/CD scenarios.
 
-1. Open the Visual Studio solution and click start
+1. Open the Visual Studio solution and click start to run the code.
 
-If ou don't want to use this automation, follow the steps below
+</details>
+
+Follow the steps below to manually walk through the steps to register and configure the applications in the Azure portal.
 
 #### Choose the Azure AD tenant where you want to create your applications
 
 As a first step you'll need to:
 
 1. Sign in to the [Azure portal](https://portal.azure.com) using either a work or school account or a personal Microsoft account.
-1. If your account is present in more than one Azure AD tenant, select `Directory + Subscription` at the top right corner in the menu on top of the page, and switch your portal session to the desired Azure AD tenant.   
+1. If your account is present in more than one Azure AD tenant, select your profile at the top right corner in the menu on top of the page. Then select **switch directory** to change your portal session to the desired Azure AD tenant.
 
 #### Register the uwpApp app (UWP-App-calling-MSGraph)
 
 1. Navigate to the Microsoft identity platform for developers [App registrations](https://go.microsoft.com/fwlink/?linkid=2083908) page.
 1. Select **New registration**.
+1. In the **Register an application page** that appears, enter your application's registration information:
    - In the **Name** section, enter a meaningful application name that will be displayed to users of the app, for example `UWP-App-calling-MSGraph`.
-   - In the **Supported account types** section, select **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**.
-   - Select **Register** to create the application.
-1. On the app **Overview** page, find the **Application (client) ID** value and record it for later. You'll need it to configure the Visual Studio configuration file for this project.
-1. In the list of pages for the app, select **Authentication**.
-   -  1. In the **Suggested Redirect URIs for public clients (mobile, desktop)** list, check **https://login.microsoftonline.com/common/oauth2/nativeclient**.
-1. Select **Save**.
-1. In the list of pages for the app, select **API permissions**
+   - Under **Supported account types**, select **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**.
+1. Select **Register** to create the application.
+1. In the app's registration screen, find and note the **Application (client) ID**. You use this value in your app's configuration file(s) later in your code.
+1. In the app's registration screen, select **Authentication** in the menu.
+   - If you don't have a platform added, select **Add a platform** and select the **Public client (mobile & desktop)** option.
+   - In the **Redirect URIs** | **Suggested Redirect URIs for public clients (mobile, desktop)** section, select **https://login.microsoftonline.com/common/oauth2/nativeclient**
+
+1. Select **Save** to save your changes.
+1. In the app's registration screen, click on the **API permissions** blade in the left to open the page where we add access to the Apis that your application needs.
    - Click the **Add a permission** button and then,
-   - Ensure that the **Microsoft APIs** tab is selected
+   - Ensure that the **Microsoft APIs** tab is selected.
    - In the *Commonly used Microsoft APIs* section, click on **Microsoft Graph**
-   - In the **Delegated permissions** section, ensure that the right permissions are checked: **User.Read**. Use the search box if necessary.
-   - Select the **Add permissions** button
+   - In the **Delegated permissions** section, select the **User.Read** in the list. Use the search box if necessary.
+   - Click on the **Add permissions** button at the bottom.
 
+##### Configure the  uwpApp app (UWP-App-calling-MSGraph) to use your app registration
 
-### Step 3:  Configure the sample to use your Azure AD tenant
+Open the project in your IDE (like Visual Studio) to configure the code.
+>In the steps below, "ClientID" is the same as "Application ID" or "AppId".
 
-In the steps below, "ClientID" is the same as "Application ID" or "AppId".
+1. Open the `active-directory-dotnet-native-uwp-v2\MainPage.xaml.cs` file
+1. Find the line ```private const string ClientId = "[Application Id pasted from the application registration portal]"``
+` and replace the existing value with the application ID (clientId) of the `UWP-App-calling-MSGraph` application copied from the Azure portal.
 
-Open the solution in Visual Studio to configure the projects
-
-#### Configure the sample to use your Azure AD app
-
-   1. In the `App.xaml.cs` file from the cloned repo, set your application/client ID copied from the App Registration Portal where you will have registered an application and added the native platform.
-
-      ``private const string ClientId = "[Application Id pasted from the application registration portal]"``
 
 1. (Optionally): Enable Windows Integrated Authentication when using a federated Azure AD tenant
 
@@ -131,6 +144,7 @@ Open the solution in Visual Studio to configure the projects
     Also, `MainPage.xaml.cs`, when building the application, ensure that the following line of code: ```.WithUseCorporateNetwork(true)```
 
 ### Step 4: Run the sample
+
 1. Run the application from Visual Studio (Debug | Start without Debugging), directly on the local machine, or after deploying to a device or an emulator.
 
 ### Known limitation: on Windows 10, you cannot sign in with your windows hello PIN

@@ -1,10 +1,11 @@
-﻿using Microsoft.Identity.Client;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -12,44 +13,37 @@ using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace active_directory_dotnet_native_uwp_v2
+namespace Native_UWP_V2
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        //Set the API Endpoint to Graph 'me' endpoint
-      
         //Set the scope for API call to user.read
-        string[] scopes = new string[] { "user.read" };
+        private string[] scopes = new string[] { "user.read" };
 
-        // Below are the clientId (Application Id) of your app registration and the tenant information. 
+        // Below are the clientId (Application Id) of your app registration and the tenant information.
         // You have to replace:
         // - the content of ClientID with the Application Id for your app registration
-        // - The content of Tenant by the information about the accounts allowed to sign-in in your application:
-        //   - For Work or School account in your org, use your tenant ID, or domain
-        //   - for any Work or School accounts, use organizations
-        //   - for any Work or School accounts, or Microsoft personal account, use common
-        //   - for Microsoft Personal account, use consumers
-        private const string ClientId = "[Enter client ID of the app as obtained from Azure Portal, e.g. 4a1aa1d5-c567-49d0-ad0b-cd957a47f842]";
-        public IPublicClientApplication PublicClientApp { get; } 
+        private const string ClientId = "[Application Id pasted from the application registration portal]";
+
+        public IPublicClientApplication PublicClientApp { get; }
 
         public MainPage()
         {
             this.InitializeComponent();
 
-
             // To change from Microsoft public cloud to a national cloud, use another value of AzureCloudInstance
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
                 .WithAuthority("https://login.microsoftonline.com/common")
-                .WithLogging((level, message, containsPii) =>
-                {
-                    Debug.WriteLine($"MSAL: {level} {message} ");
-                }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
                 .WithUseCorporateNetwork(false)
-                .WithRedirectUri(Constant.PublicClientRedirectUri)
-                .Build();                
+                .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+                 .WithLogging((level, message, containsPii) =>
+                 {
+                     Debug.WriteLine($"MSAL: {level} {message} ");
+                 }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
+                .Build();
         }
 
         /// <summary>
@@ -61,7 +55,7 @@ namespace active_directory_dotnet_native_uwp_v2
             ResultText.Text = string.Empty;
             TokenInfoText.Text = string.Empty;
 
-            // It's good practice to not do work on the UI thread, so use ConfigureAwait(false) whenever possible.            
+            // It's good practice to not do work on the UI thread, so use ConfigureAwait(false) whenever possible.
             IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
             IAccount firstAccount = accounts.FirstOrDefault();
 
@@ -73,7 +67,7 @@ namespace active_directory_dotnet_native_uwp_v2
             catch (MsalUiRequiredException ex)
             {
                 // A MsalUiRequiredException happened on AcquireTokenSilentAsync. This indicates you need to call AcquireTokenAsync to acquire a token
-                System.Diagnostics.Debug.WriteLine($"MsalUiRequiredException: {ex.Message}");
+                Debug.WriteLine($"MsalUiRequiredException: {ex.Message}");
 
                 try
                 {
@@ -95,7 +89,8 @@ namespace active_directory_dotnet_native_uwp_v2
             if (authResult != null)
             {
                 var graphServiceClient = GetGraphServiceClient(authResult.AccessToken);
-                
+
+                // Call the /me endpoint of Graph
                 User graphUser = await graphServiceClient.Me.Request().GetAsync();
 
                 // Go back to the UI thread to make changes to the UI
