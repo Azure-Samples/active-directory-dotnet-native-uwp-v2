@@ -1,5 +1,5 @@
-﻿using Microsoft.Graph;
-using Microsoft.Identity.Client;
+﻿using Microsoft.Identity.Client;
+using Microsoft.Graph;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -101,8 +101,8 @@ namespace active_directory_dotnet_native_uwp_v2
                 // Go back to the UI thread to make changes to the UI
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    ResultText.Text = "@odata.context: " + graphUser.AdditionalData["@odata.context"] + "\nBusiness Phone: " + graphUser.BusinessPhones.FirstOrDefault()
-                                      + "\nDisplay Name: " + graphUser.DisplayName + "\nGiven Name: " + graphUser.GivenName + "\nid: " + graphUser.Id
+                    ResultText.Text = "Display Name: " + graphUser.DisplayName + "\nBusiness Phone: " + graphUser.BusinessPhones.FirstOrDefault()
+                                      + "\nGiven Name: " + graphUser.GivenName + "\nid: " + graphUser.Id
                                       + "\nUser Principal Name: " + graphUser.UserPrincipalName;
                     DisplayBasicTokenInfo(authResult);
                     this.SignOutButton.Visibility = Visibility.Visible;
