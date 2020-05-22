@@ -36,7 +36,7 @@
     {
       "App": "uwpApp",
       "SettingKind": "Code",
-      "SettingFile": "\\..\\active-directory-dotnet-native-uwp-v2\\MainPage.xaml.cs",
+      "SettingFile": "\\..\\Native_UWP_V2\\MainPage.xaml.cs",
       "Mappings": [
         {
           "key": "string ClientId",
