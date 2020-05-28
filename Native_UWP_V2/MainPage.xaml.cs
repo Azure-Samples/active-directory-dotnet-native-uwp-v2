@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Windows.Security.Authentication.Web;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -26,8 +27,8 @@ namespace Native_UWP_V2
         // Below are the clientId (Application Id) of your app registration and the tenant information.
         // You have to replace:
         // - the content of ClientID with the Application Id for your app registration
-        private const string ClientId = "[Application Id pasted from the application registration portal]";
-
+       // private const string ClientId = "[Application Id pasted from the application registration portal]";
+        private const string ClientId = "3a7a2433-c36c-43a4-871b-af52e7ac9e74";
         public IPublicClientApplication PublicClientApp { get; }
 
         public MainPage()
@@ -38,12 +39,14 @@ namespace Native_UWP_V2
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
                 .WithAuthority("https://login.microsoftonline.com/common")
                 .WithUseCorporateNetwork(false)
-                .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
-                 .WithLogging((level, message, containsPii) =>
+               // .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+                .WithDefaultRedirectUri()                 
+                .WithLogging((level, message, containsPii) =>
                  {
                      Debug.WriteLine($"MSAL: {level} {message} ");
                  }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
                 .Build();
+           // var test = PublicClientApp.AcquireTokenInteractive(scopes).ExecuteAsync().Result;
         }
 
         /// <summary>
@@ -58,6 +61,7 @@ namespace Native_UWP_V2
             // It's good practice to not do work on the UI thread, so use ConfigureAwait(false) whenever possible.
             IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
             IAccount firstAccount = accounts.FirstOrDefault();
+            var callBackUri = WebAuthenticationBroker.GetCurrentApplicationCallbackUri();
 
             try
             {
@@ -72,8 +76,7 @@ namespace Native_UWP_V2
                 try
                 {
                     authResult = await PublicClientApp.AcquireTokenInteractive(scopes)
-                                                      .ExecuteAsync()
-                                                      .ConfigureAwait(false);
+                                                      .ExecuteAsync();
                 }
                 catch (MsalException msalex)
                 {
