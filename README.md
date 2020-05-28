@@ -102,7 +102,7 @@ As a first step you'll need to:
 1. Sign in to the [Azure portal](https://portal.azure.com) using either a work or school account or a personal Microsoft account.
 1. If your account is present in more than one Azure AD tenant, select your profile at the top right corner in the menu on top of the page. Then select **switch directory** to change your portal session to the desired Azure AD tenant.
 
-#### Register the uwpApp app (UWP-App-calling-MSGraph)
+#### Register the UWP App (UWP-App-calling-MSGraph)
 
 1. Navigate to the Microsoft identity platform for developers [App registrations](https://go.microsoft.com/fwlink/?linkid=2083908) page.
 1. Select **New registration**.
@@ -123,14 +123,14 @@ As a first step you'll need to:
    - In the **Delegated permissions** section, select the **User.Read** in the list. Use the search box if necessary.
    - Click on the **Add permissions** button at the bottom.
 
-##### Configure the  uwpApp app (UWP-App-calling-MSGraph) to use your app registration
+##### Configure the  UWP App (UWP-App-calling-MSGraph) to use your app registration
 
 Open the project in your IDE (like Visual Studio) to configure the code.
 >In the steps below, "ClientID" is the same as "Application ID" or "AppId".
 
 1. Open the `active-directory-dotnet-native-uwp-v2\MainPage.xaml.cs` file
 1. Find the line ```private const string ClientId = "[Application Id pasted from the application registration portal]"``
-` and replace the existing value with the application ID (clientId) of the `UWP-App-calling-MSGraph` application copied from the Azure portal.
+` and replace the existing value with the application ID (clientId) of the  `UWP-App-calling-MSGraph` application copied from the Azure portal.
 
 
 1. (Optionally): Enable Windows Integrated Authentication when using a federated Azure AD tenant
@@ -160,6 +160,45 @@ If sign-in with your work or school account and your organization requires condi
 - On Windows 10 desktop UWP application, if you enabled the settings described above, the list of certificates is presented, however if you choose to use your PIN, the PIN window is never presented. This is a known limitation with Web authentication broker in UWP applications running on Windows 10 (this works fine on Windows Phone 10). As a work-around, you will need to click on the **sign-in with other options** link and then choose **Sign-in with a username and password instead**, provide your password and go through the phone authentication.
 
 - we plan to remove this limitation in the future by integrating the Web Account Manager (WAM)
+
+## Alternate approach to use WithDefaultRedirectURI()
+
+In the current sample, WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient") method is used. To use WithDeaultRedirectURI(), please follow below steps:
+
+1. In `MSAL.XAML.cs`, Update WithRedirectUri with WithDefaultRedirectUri as shown in below lines of code:
+
+**Current Code**
+```
+PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
+    .WithAuthority("https://login.microsoftonline.com/common")
+    .WithUseCorporateNetwork(false)
+    .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+    .WithLogging((level, message, containsPii) =>
+     {
+         Debug.WriteLine($"MSAL: {level} {message} ");
+     }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
+    .Build();
+
+```
+**Updated Code**
+```
+PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
+    .WithAuthority("https://login.microsoftonline.com/common")
+    .WithUseCorporateNetwork(false)
+    .WithDefaultRedirectUri()
+    .WithLogging((level, message, containsPii) =>
+     {
+         Debug.WriteLine($"MSAL: {level} {message} ");
+     }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
+    .Build();
+```
+
+2.	Discover the callback URI for your app by adding the following line and setting a breakpoint on:    
+var redirectURI = Windows.Security.Authentication.Web.WebAuthenticationBroker.GetCurrentApplicationCallbackUri();    
+Run the app, and copy the value of redirectUri when the breakpoint is hit. The value should look something similar to the following:  
+`ms-app://s-1-15-2-1352796503-54529114-405753024-3540103335-3203256200-511895534-1429095407/`
+
+3. Add the returned value in RedirectUri under Authentication blade in the Application Registration Portal.
 
 ## Steps to build from scratch
 
