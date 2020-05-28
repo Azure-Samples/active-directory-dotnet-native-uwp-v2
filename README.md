@@ -165,7 +165,7 @@ If sign-in with your work or school account and your organization requires condi
 
 In the current sample, WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient") method is used. To use WithDeaultRedirectURI(), please follow below steps:
 
-1. In `MSAL.XAML.cs`, Update WithRedirectUri with WithDefaultRedirectUri as shown in below lines of code:
+1. In `MainPage.XAML.cs`, Update WithRedirectUri with WithDefaultRedirectUri as shown in below lines of code:
 
 **Current Code**
 ```
