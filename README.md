@@ -22,6 +22,22 @@ urlFragment: uwp-signing-in-graph-aad
 
 ## About this sample
 
+### Table of content
+- [About this sample](#about-this-sample)
+  - [Table of content](#table-of-content)
+  - [Overview](#overview)
+- [Steps to run](#steps-to-run)
+- [How to run this sample](#how-to-run-this-sample)
+  - [Step 1:  Clone or download this repository](#step-1-clone-or-download-this-repository)
+  - [Step 2:  Register the sample application with your Azure Active Directory tenant](#step-2-register-the-sample-application-with-your-azure-active-directory-tenant)
+  - [Step 4: Run the sample](#step-4-run-the-sample)
+  - [Known limitation: on Windows 10, you cannot sign in with your windows hello PIN](#known-limitation-on-windows-10-you-cannot-sign-in-with-your-windows-hello-pin)
+- [Alternate approach to use WithDefaultRedirectURI()](#alternate-approach-to-use-withdefaultredirecturi)
+- [Steps to build from scratch](#steps-to-build-from-scratch)
+- [Community help and support](#community-help-and-support)
+- [Contributing](#contributing)
+- [More information](#more-information)
+
 ### Overview
 
 This simple sample demonstrates how to use the [Microsoft Authentication Library (MSAL) for .NET](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) to get an access token and call the Microsoft Graph using MS Graph SDK from an Universal Windows Platform (UWP) application.
