@@ -207,11 +207,20 @@ Function ConfigureApplications
    Write-Host "Granted permissions."
 
    # Update config file for 'uwpApp'
-   $configFile = $pwd.Path + "\..\active-directory-dotnet-native-uwp-v2\MainPage.xaml.cs"
+   $configFile = $pwd.Path + "\..\Native_UWP_V2\MainPage.xaml.cs"
    Write-Host "Updating the sample code ($configFile)"
    $dictionary = @{ "string ClientId" = $uwpAppAadApplication.AppId };
    UpdateTextFile -configFilePath $configFile -dictionary $dictionary
-  
+   Write-Host ""
+   Write-Host -ForegroundColor Green "------------------------------------------------------------------------------------------------" 
+   Write-Host "IMPORTANT: Please follow the instructions below to complete a few manual step(s) in the Azure portal":
+   Write-Host "- For 'uwpApp'"
+   Write-Host "  - Navigate to '$uwpAppPortalUrl'"
+   Write-Host "  - Navigate to the Manifest page and change 'signInAudience' to 'AzureADandPersonalMicrosoftAccount'." -ForegroundColor Red 
+   Write-Host "  - Navigate to the Manifest page and change 'accessTokenAcceptedVersion' to 2." -ForegroundColor Red 
+
+   Write-Host -ForegroundColor Green "------------------------------------------------------------------------------------------------" 
+     
    Add-Content -Value "</tbody></table></body></html>" -Path createdApps.html  
 }
 

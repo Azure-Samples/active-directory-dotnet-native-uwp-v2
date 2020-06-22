@@ -61,19 +61,19 @@ To run this sample, you'll need:
 - [Visual Studio 2019](https://aka.ms/vsdownload)
 - An Internet connection
 - An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/documentation/articles/active-directory-howto-tenant/)
-- A user account in your Azure AD tenant or a Microsoft account (formerly Windows Live account). Therefore, if you signed in to the [Azure portal](https://portal.azure.com) with a Microsoft account and have never created a user account in your directory before, you need to do that now.
+- A user account in your Azure AD tenant. This sample will not work with a Microsoft account (formerly Windows Live account). Therefore, if you signed in to the [Azure portal](https://portal.azure.com) with a Microsoft account and have never created a user account in your directory before, you need to do that now.
 
 ### Step 1:  Clone or download this repository
 
 From your shell or command line:
 
-   ```Shell
-   git clone https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2.git
-   ```
+```Shell
+git clone https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2.git
+```
 
 or download and extract the repository .zip file.
 
-> Given that the name of the sample is quiet long, and so are the names of the referenced NuGet packages, you might want to clone it in a folder close to the root of your hard drive, to avoid the 256 character path length limitation on Windows.
+> Given that the name of the sample is quiet long, and so are the names of the referenced NuGet packages, you might want to clone it in a folder close to the root of your hard drive, to avoid file size limitations on Windows.
 
 ### Step 2:  Register the sample application with your Azure Active Directory tenant
 
@@ -109,14 +109,15 @@ There is one project in this sample. To register it, you can:
 
 </details>
 
-Follow the steps below to manually walk through the steps to register and configure the applications in the Azure portal.
+Follow the steps below to manually walk through the steps to register and configure the applications.
 
 #### Choose the Azure AD tenant where you want to create your applications
 
 As a first step you'll need to:
 
 1. Sign in to the [Azure portal](https://portal.azure.com) using either a work or school account or a personal Microsoft account.
-1. If your account is present in more than one Azure AD tenant, select your profile at the top right corner in the menu on top of the page. Then select **switch directory** to change your portal session to the desired Azure AD tenant.
+1. If your account is present in more than one Azure AD tenant, select your profile at the top right corner in the menu on top of the page, and then **switch directory**.
+   Change your portal session to the desired Azure AD tenant.															 
 
 #### Register the UWP App (UWP-App-calling-MSGraph)
 
@@ -144,7 +145,7 @@ As a first step you'll need to:
 Open the project in your IDE (like Visual Studio) to configure the code.
 >In the steps below, "ClientID" is the same as "Application ID" or "AppId".
 
-1. Open the `active-directory-dotnet-native-uwp-v2\MainPage.xaml.cs` file
+1. Open the `Native_UWP_V2\MainPage.xaml.cs` file
 1. Find the line ```private const string ClientId = "[Application Id pasted from the application registration portal]"``
 ` and replace the existing value with the application ID (clientId) of the  `UWP-App-calling-MSGraph` application copied from the Azure portal.
 
