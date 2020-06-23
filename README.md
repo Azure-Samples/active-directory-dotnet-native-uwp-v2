@@ -27,8 +27,9 @@ urlFragment: uwp-signing-in-graph-aad
   - [Overview](#overview)
 - [Steps to run](#steps-to-run)
 - [How to run this sample](#how-to-run-this-sample)
-  - [Step 1:  Clone or download this repository](#step-1-clone-or-download-this-repository)
-  - [Step 2:  Register the sample application with your Azure Active Directory tenant](#step-2-register-the-sample-application-with-your-azure-active-directory-tenant)
+  - [Step 1: Clone or download this repository](#step-1-clone-or-download-this-repository)
+  - [Step 2: Register the sample application with your Azure Active Directory tenant](#step-2-register-the-sample-application-with-your-azure-active-directory-tenant)
+  - [Step 3: Configure the  UWP App (UWP-App-calling-MSGraph) to use your app registration](#step-3-configure-the-uwp-app-uwp-app-calling-msgraph-to-use-your-app-registration)
   - [Step 4: Run the sample](#step-4-run-the-sample)
   - [Known limitation: on Windows 10, you cannot sign in with your windows hello PIN](#known-limitation-on-windows-10-you-cannot-sign-in-with-your-windows-hello-pin)
 - [Alternate approach to use WithDefaultRedirectURI()](#alternate-approach-to-use-withdefaultredirecturi)
@@ -62,7 +63,7 @@ To run this sample, you'll need:
 - An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/documentation/articles/active-directory-howto-tenant/)
 - A user account in your Azure AD tenant. This sample will not work with a Microsoft account (formerly Windows Live account). Therefore, if you signed in to the [Azure portal](https://portal.azure.com) with a Microsoft account and have never created a user account in your directory before, you need to do that now.
 
-### Step 1:  Clone or download this repository
+### Step 1: Clone or download this repository
 
 From your shell or command line:
 
@@ -72,13 +73,13 @@ git clone https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2
 
 or download and extract the repository .zip file.
 
-> Given that the names of the referenced NuGet packages are quiet long, you might want to clone it in a folder close to the root of your hard drive, to avoid file size limitations on Windows.
+> Given that the names of the referenced NuGet packages are quite long, you might want to clone it in a folder close to the root of your hard drive, to avoid file size limitations on Windows.
 
-### Step 2:  Register the sample application with your Azure Active Directory tenant
+### Step 2: Register the sample application with your Azure Active Directory tenant
 
 There is one project in this sample. To register it, you can:
 
-- either follow the steps [Step 2: Register the sample with your Azure Active Directory tenant](#step-2-register-the-sample-with-your-azure-active-directory-tenant) and [Step 3:  Configure the sample to use your Azure AD tenant](#choose-the-azure-ad-tenant-where-you-want-to-create-your-applications)
+- either follow the steps [Step 2: Register the sample with your Azure Active Directory tenant](#step-2-register-the-sample-with-your-azure-active-directory-tenant) and [Step 3: Configure the  UWP App (UWP-App-calling-MSGraph) to use your app registration](#step-3-configure-the-uwp-app-uwp-app-calling-msgraph-to-use-your-app-registration)
 - or use PowerShell scripts that:
   - **automatically** creates the Azure AD applications and related objects (passwords, permissions, dependencies) for you. Note that this works for Visual Studio only.
   - modify the Visual Studio projects' configuration files.
@@ -87,14 +88,14 @@ There is one project in this sample. To register it, you can:
   <summary>Expand this section if you want to use this automation:</summary>
 
 1. On Windows, run PowerShell and navigate to the root of the cloned directory
-1. In PowerShell run:
+2. In PowerShell run:
 
    ```PowerShell
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
    ```
 
-1. Run the script to create your Azure AD application and configure the code of the sample application accordingly.
-1. In PowerShell run:
+3. Run the script to create your Azure AD application and configure the code of the sample application accordingly.
+4. In PowerShell run:
 
    ```PowerShell
    cd .\AppCreationScripts\
@@ -104,7 +105,7 @@ There is one project in this sample. To register it, you can:
    > Other ways of running the scripts are described in [App Creation Scripts](./AppCreationScripts/AppCreationScripts.md)
    > The scripts also provide a guide to automated application registration, configuration and removal which can help in your CI/CD scenarios.
 
-1. Open the Visual Studio solution and click start to run the code.
+5. Open the Visual Studio solution and click start to run the code.
 
 </details>
 
@@ -139,7 +140,7 @@ As a first step you'll need to:
    - In the **Delegated permissions** section, select **User.Read** in the list. Use the search box if necessary.
    - Click on the **Add permissions** button at the bottom.
 
-##### Configure the  UWP App (UWP-App-calling-MSGraph) to use your app registration
+### Step 3: Configure the  UWP App (UWP-App-calling-MSGraph) to use your app registration
 
 Open the project in your IDE (like Visual Studio) to configure the code.
 >In the steps below, "ClientID" is the same as "Application ID" or "AppId".
