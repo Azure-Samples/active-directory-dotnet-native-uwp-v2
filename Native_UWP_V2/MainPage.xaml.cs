@@ -28,6 +28,9 @@ namespace Native_UWP_V2
         // - the content of ClientID with the Application Id for your app registration
         private const string ClientId = "[Application Id pasted from the application registration portal]";
 
+        private const string Tenant = "common"; // Alternatively "[Enter your tenant, as obtained from the azure portal, e.g. kko365.onmicrosoft.com]"
+        private const string Authority = "https://login.microsoftonline.com/" + Tenant;
+
         // The MSAL Public client app
         private static IPublicClientApplication PublicClientApp;
 
@@ -62,9 +65,9 @@ namespace Native_UWP_V2
                     this.SignOutButton.Visibility = Visibility.Visible;
                 });
             }
-            catch (MsalException msalex)
+            catch (MsalException msalEx)
             {
-                await DisplayMessageAsync($"Error Acquiring Token:{System.Environment.NewLine}{msalex}");
+                await DisplayMessageAsync($"Error Acquiring Token:{System.Environment.NewLine}{msalEx}");
             }
             catch (Exception ex)
             {
@@ -82,7 +85,7 @@ namespace Native_UWP_V2
         {
             // Initialize the MSAL library by building a public client application
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
-                .WithAuthority("https://login.microsoftonline.com/common")
+                .WithAuthority(Authority)
                 .WithUseCorporateNetwork(false)
                 .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
                  .WithLogging((level, message, containsPii) =>

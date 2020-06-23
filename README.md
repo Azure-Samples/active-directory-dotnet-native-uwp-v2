@@ -22,9 +22,8 @@ urlFragment: uwp-signing-in-graph-aad
 
 ## About this sample
 
-### Table of content
+### Table of contents
 - [About this sample](#about-this-sample)
-  - [Table of content](#table-of-content)
   - [Overview](#overview)
 - [Steps to run](#steps-to-run)
 - [How to run this sample](#how-to-run-this-sample)
@@ -40,7 +39,7 @@ urlFragment: uwp-signing-in-graph-aad
 
 ### Overview
 
-This simple sample demonstrates how to use the [Microsoft Authentication Library (MSAL) for .NET](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) to get an access token and call the Microsoft Graph using MS Graph SDK from an Universal Windows Platform (UWP) application.
+This sample demonstrates how to use the [Microsoft Authentication Library (MSAL) for .NET](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) to get an access token and call the Microsoft Graph using the MS Graph SDK from a Universal Windows Platform (UWP) application.
 
 1. The .NET client UWP application uses the Microsoft Authentication Library (MSAL) to sign-in a user and obtain a JWT access token from Azure Active Directory (Azure AD).
 2. The access token is then used as a bearer token to call  Microsoft Graph and fetch the signed-in user's details.
@@ -73,7 +72,7 @@ git clone https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2
 
 or download and extract the repository .zip file.
 
-> Given that the name of the sample is quiet long, and so are the names of the referenced NuGet packages, you might want to clone it in a folder close to the root of your hard drive, to avoid file size limitations on Windows.
+> Given that the names of the referenced NuGet packages are quiet long, you might want to clone it in a folder close to the root of your hard drive, to avoid file size limitations on Windows.
 
 ### Step 2:  Register the sample application with your Azure Active Directory tenant
 
@@ -133,11 +132,11 @@ As a first step you'll need to:
    - In the **Redirect URIs** | **Suggested Redirect URIs for public clients (mobile, desktop)** section, select **https://login.microsoftonline.com/common/oauth2/nativeclient**
 
 1. Select **Save** to save your changes.
-1. In the app's registration screen, click on the **API permissions** blade in the left to open the page where we add access to the Apis that your application needs.
+1. In the app's registration screen, click on the **API permissions** blade in the left to open the page where we add access to the APIs that your application needs.
    - Click the **Add a permission** button and then,
    - Ensure that the **Microsoft APIs** tab is selected.
    - In the *Commonly used Microsoft APIs* section, click on **Microsoft Graph**
-   - In the **Delegated permissions** section, select the **User.Read** in the list. Use the search box if necessary.
+   - In the **Delegated permissions** section, select **User.Read** in the list. Use the search box if necessary.
    - Click on the **Add permissions** button at the bottom.
 
 ##### Configure the  UWP App (UWP-App-calling-MSGraph) to use your app registration
@@ -180,14 +179,16 @@ If sign-in with your work or school account and your organization requires condi
 
 ## Alternate approach to use WithDefaultRedirectURI()
 
-In the current sample, WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient") method is used. To use WithDeaultRedirectURI(), please follow below steps:
+In the current sample, `WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")` method is used. To use `WithDefaultRedirectURI()`, please follow below steps:
 
-1. In `MainPage.XAML.cs`, Update WithRedirectUri with WithDefaultRedirectUri as shown in below lines of code:
+1. In `MainPage.XAML.cs`, Update `WithRedirectUri` with `WithDefaultRedirectUri` as shown in below lines of code:
 
 **Current Code**
-```
+
+```csharp
+
 PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
-    .WithAuthority("https://login.microsoftonline.com/common")
+    .WithAuthority(Authority)
     .WithUseCorporateNetwork(false)
     .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
     .WithLogging((level, message, containsPii) =>
@@ -198,7 +199,9 @@ PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
 
 ```
 **Updated Code**
-```
+
+```csharp
+
 PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
     .WithAuthority("https://login.microsoftonline.com/common")
     .WithUseCorporateNetwork(false)
@@ -210,10 +213,28 @@ PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
     .Build();
 ```
 
-2.	Discover the callback URI for your app by adding the following line and setting a breakpoint on:    
-var redirectURI = Windows.Security.Authentication.Web.WebAuthenticationBroker.GetCurrentApplicationCallbackUri();    
+2.	Discover the callback URI for your app by adding redirectURI field in `MainPage.xaml.cs` and setting a breakpoint on it:
+
+```csharp
+
+public sealed partial class MainPage : Page
+{
+        ...
+
+        string redirectURI = Windows.Security.Authentication.Web.WebAuthenticationBroker
+                            .GetCurrentApplicationCallbackUri().ToString();
+        public MainPage()
+        {
+            ...
+        }
+       ...
+}
+  
+```
 Run the app, and copy the value of redirectUri when the breakpoint is hit. The value should look something similar to the following:  
 `ms-app://s-1-15-2-1352796503-54529114-405753024-3540103335-3203256200-511895534-1429095407/`
+
+You can remove the mentioned line of code as it is required only once to fetch the value.
 
 3. Add the returned value in RedirectUri under Authentication blade in the Application Registration Portal.
 
