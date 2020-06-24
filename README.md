@@ -1,15 +1,22 @@
 ---
+services: active-directory
+platforms: dotnet
+author: Shama-K
+level: 200
+client: UWP
+service: Microsoft Graph
+endpoint: Microsoft identity platform
+page_type: sample				  								 
 languages:
 - csharp
-- powershell
 page_type: sample
-description: "This sample shows how to use the Microsoft Authentication Library for .NET to get an access token and call the Microsoft Graph from a UWP app."
 products:
 - azure
 - azure-active-directory
 - windows
 - windows-uwp
 - office-ms-graph
+description: "This sample demonstrates how to use the Microsoft Authentication Library for .NET to get an access token and call the Microsoft Graph from a UWP app."
 urlFragment: uwp-signing-in-graph-aad
 ---
 
@@ -62,6 +69,7 @@ To run this sample, you'll need:
 - An Internet connection
 - An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/documentation/articles/active-directory-howto-tenant/)
 - A user account in your Azure AD tenant. This sample will not work with a Microsoft account (formerly Windows Live account). Therefore, if you signed in to the [Azure portal](https://portal.azure.com) with a Microsoft account and have never created a user account in your directory before, you need to do that now.
+- AzureAD Powershell Module if opting to use the automatic set up in Step 2 (available at the [Powershell Gallery](https://www.powershellgallery.com/packages/AzureAD/))
 
 ### Step 1: Clone or download this repository
 
@@ -146,10 +154,11 @@ Open the project in your IDE (like Visual Studio) to configure the code.
 >In the steps below, "ClientID" is the same as "Application ID" or "AppId".
 
 1. Open the `Native_UWP_V2\MainPage.xaml.cs` file
-1. Find the line ```private const string ClientId = "[Application Id pasted from the application registration portal]"``
-` and replace the existing value with the application ID (clientId) of the  `UWP-App-calling-MSGraph` application copied from the Azure portal.
-
-
+1. Find the below line 
+   ```csharp
+   private const string ClientId = "[Application Id pasted from the application registration portal]"
+   ``` 
+   and replace the existing value with the application ID (clientId) of the  `UWP-App-calling-MSGraph` application copied from the Azure portal.
 1. (Optionally): Enable Windows Integrated Authentication when using a federated Azure AD tenant
 
     Out of the box, this sample is not configured to work with Integrated Windows Authentication (IWA) when used with a federated Azure Active Directory domain. To work with IWA the application manifest must enable additional capabilities. These capabilities are not configured by default for this sample because applications requesting the Enterprise Authentication or Shared User Certificates capabilities require a higher level of verification to be accepted into the Windows Store, and not all developers may wish to perform the higher level of verification.
