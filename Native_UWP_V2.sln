@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.4
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "active-directory-dotnet-native-uwp-v2", "active-directory-dotnet-native-uwp-v2\active-directory-dotnet-native-uwp-v2.csproj", "{D43D178A-DF90-4333-A151-1E5D423F1C40}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Native_UWP_V2", "Native_UWP_V2\Native_UWP_V2.csproj", "{D43D178A-DF90-4333-A151-1E5D423F1C40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +36,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {871456BC-9164-4F6A-8DFE-67511F46BD6B}
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,5 @@
-﻿using Microsoft.Identity.Client;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -6,7 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace active_directory_dotnet_native_uwp_v2
+namespace Native_UWP_V2
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -69,7 +70,7 @@ namespace active_directory_dotnet_native_uwp_v2
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
