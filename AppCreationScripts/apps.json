@@ -30,7 +30,7 @@
       ],
       "codeConfigurations": [	
         {
-		      "settingFile": "/active-directory-dotnet-native-uwp-v2/MainPage.xaml.cs",
+		      "settingFile": "/Native_UWP_V2/MainPage.xaml.cs",
           "replaceTokens": {
             "appId": "4a1aa1d5-c567-49d0-ad0b-cd957a47f842",
             "tenantId": "common",
