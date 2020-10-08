@@ -173,6 +173,8 @@ Open the project in your IDE (like Visual Studio) to configure the code.
 
 1. Run the application from Visual Studio (Debug | Start without Debugging), directly on the local machine, or after deploying to a device or an emulator.
 
+> [Consider taking a moment to share your experience with us.](https://forms.office.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR73pcsbpbxNJuZCMKN0lURpUOTFTSkg3WUVGTjZENFVYMDRRQjdXUkUzQyQlQCN0PWcu)
+
 ### Known limitation: on Windows 10, you cannot sign in with your windows hello PIN
 
 If sign-in with your work or school account and your organization requires conditional access, you are asked to provide a certificate:
