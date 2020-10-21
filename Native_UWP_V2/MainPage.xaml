@@ -17,8 +17,6 @@
             <TextBox x:Name="ResultText" TextWrapping="Wrap" MinHeight="220" Margin="5" FontFamily="Segoe Ui"/>
             <TextBlock Margin="2,0,0,-5" FontFamily="Segoe Ui" ><Run Text="Token Info"/><LineBreak/><Run/></TextBlock>
             <TextBox x:Name="TokenInfoText" TextWrapping="Wrap" MinHeight="170" FontFamily="Segoe Ui"/>
-            <TextBlock Margin="2,0,0,-5" FontFamily="Segoe Ui" ><Run Text="Token"/><LineBreak/><Run/></TextBlock>
-            <TextBox x:Name="TokenText" TextWrapping="Wrap" MinHeight="170" FontFamily="Segoe Ui"/>
         </StackPanel>
     </Grid>
 </Page>

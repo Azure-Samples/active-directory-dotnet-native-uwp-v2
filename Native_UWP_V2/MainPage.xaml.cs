@@ -170,7 +170,6 @@ namespace Native_UWP_V2
             {
                 TokenInfoText.Text += $"User Name: {authResult.Account.Username}" + Environment.NewLine;
                 TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
-                TokenText.Text += $"{authResult.AccessToken}";
             }
         }
 
