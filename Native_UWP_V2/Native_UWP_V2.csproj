@@ -146,7 +146,7 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>active-directory-dotnet-native-uwp-v2_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
