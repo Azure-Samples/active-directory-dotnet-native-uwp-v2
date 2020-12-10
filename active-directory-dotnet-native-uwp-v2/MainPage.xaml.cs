@@ -41,7 +41,7 @@ namespace active_directory_dotnet_native_uwp_v2
 
             try
             {
-                authResult = await App.PublicClientApp.AcquireTokenSilentAsync(scopes, firstAccount);
+                authResult = await App.PublicClientApp.AcquireTokenSilent(scopes, firstAccount).ExecuteAsync();
             }
             catch (MsalUiRequiredException ex)
             {
@@ -50,7 +50,7 @@ namespace active_directory_dotnet_native_uwp_v2
 
                 try
                 {
-                    authResult = await App.PublicClientApp.AcquireTokenAsync(scopes).ConfigureAwait(false);
+                    authResult = await App.PublicClientApp.AcquireTokenInteractive(scopes).ExecuteAsync();
                 }
                 catch (MsalException msalex)
                 {

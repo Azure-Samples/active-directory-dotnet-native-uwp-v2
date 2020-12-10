@@ -99,7 +99,10 @@ namespace active_directory_dotnet_native_uwp_v2
         private static string ClientId = "0b8b0665-bc13-4fdc-bd72-e0227b9fc011";
         private static string Tenant = "common";
 
-        public static PublicClientApplication PublicClientApp { get; } = new PublicClientApplication(ClientId, $"https://login.microsoftonline.com/{Tenant}");
+        public static IPublicClientApplication PublicClientApp { get; } = 
+            PublicClientApplicationBuilder.Create(ClientId)
+            .WithAuthority($"https://login.microsoftonline.com/{Tenant}")
+            .Build();
 
     }
 }
