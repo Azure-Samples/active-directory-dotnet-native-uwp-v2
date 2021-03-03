@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using System;
@@ -92,7 +93,7 @@ namespace Native_UWP_V2
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
                 .WithAuthority(Authority)
                 .WithUseCorporateNetwork(false)
-                .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+                .WithRedirectUri(DefaultRedirectUri.Value)
                  .WithLogging((level, message, containsPii) =>
                  {
                      Debug.WriteLine($"MSAL: {level} {message} ");
