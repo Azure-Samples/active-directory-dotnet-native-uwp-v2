@@ -65,8 +65,9 @@ You would have to change a few things (see below, build from scratch)
 
 To run this sample, you'll need:
 
-- [Visual Studio 2019](https://aka.ms/vsdownload)
+- [Visual Studio 2022](https://aka.ms/vsdownload)
 - An Internet connection
+- Windows SDK minimum version 10.0.17663.0
 - An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/documentation/articles/active-directory-howto-tenant/)
 - A user account in your Azure AD tenant. This sample will not work with a Microsoft account (formerly Windows Live account). Therefore, if you signed in to the [Azure portal](https://portal.azure.com) with a Microsoft account and have never created a user account in your directory before, you need to do that now.
 - AzureAD Powershell Module if opting to use the automatic set up in Step 2 (available at the [Powershell Gallery](https://www.powershellgallery.com/packages/AzureAD/))
@@ -85,40 +86,6 @@ or download and extract the repository .zip file.
 
 ### Step 2: Register the sample application with your Azure Active Directory tenant
 
-There is one project in this sample. To register it, you can:
-
-- either follow the steps [Step 2: Register the sample with your Azure Active Directory tenant](#step-2-register-the-sample-with-your-azure-active-directory-tenant) and [Step 3: Configure the  UWP App (UWP-App-calling-MSGraph) to use your app registration](#step-3-configure-the-uwp-app-uwp-app-calling-msgraph-to-use-your-app-registration)
-- or use PowerShell scripts that:
-  - **automatically** creates the Azure AD applications and related objects (passwords, permissions, dependencies) for you. Note that this works for Visual Studio only.
-  - modify the Visual Studio projects' configuration files.
-
-<details>
-  <summary>Expand this section if you want to use this automation:</summary>
-
-1. On Windows, run PowerShell and navigate to the root of the cloned directory
-2. In PowerShell run:
-
-   ```PowerShell
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
-   ```
-
-3. Run the script to create your Azure AD application and configure the code of the sample application accordingly.
-4. In PowerShell run:
-
-   ```PowerShell
-   cd .\AppCreationScripts\
-   .\Configure.ps1
-   ```
-
-   > Other ways of running the scripts are described in [App Creation Scripts](./AppCreationScripts/AppCreationScripts.md)
-   > The scripts also provide a guide to automated application registration, configuration and removal which can help in your CI/CD scenarios.
-
-5. Open the Visual Studio solution and click start to run the code.
-
-</details>
-
-Follow the steps below to manually walk through the steps to register and configure the applications.
-
 #### Choose the Azure AD tenant where you want to create your applications
 
 As a first step you'll need to:
@@ -136,9 +103,19 @@ As a first step you'll need to:
    - Under **Supported account types**, select **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**.
 1. Select **Register** to create the application.
 1. In the app's registration screen, find and note the **Application (client) ID**. You use this value in your app's configuration file(s) later in your code.
+1. The redirect URI is tied to the application's identity. To find it, execute the following code inside your app: 
+
+```csharp
+ // returns smth like S-1-15-2-2601115387-131721061-1180486061-1362788748-631273777-3164314714-2766189824
+string sid = Windows.Security.Authentication.Web.WebAuthenticationBroker.GetCurrentApplicationCallbackUri().Host.ToUpper();
+
+// This is redirect uri you need to register in the app registration portal. The app config does not need it.
+string redirectUri = $"ms-appx-web://microsoft.aad.brokerplugin/{sid}";
+```
+
 1. In the app's registration screen, select **Authentication** in the menu.
    - If you don't have a platform added, select **Add a platform** and select the **Public client (mobile & desktop)** option.
-   - In the **Redirect URIs** | **Suggested Redirect URIs for public clients (mobile, desktop)** section, select **https://login.microsoftonline.com/common/oauth2/nativeclient**
+   - In the **Redirect URIs** | add the redirect URI of your app (see above).
 
 1. Select **Save** to save your changes.
 1. In the app's registration screen, click on the **API permissions** blade in the left to open the page where we add access to the APIs that your application needs.
@@ -156,18 +133,9 @@ Open the project in your IDE (like Visual Studio) to configure the code.
 1. Open the `Native_UWP_V2\MainPage.xaml.cs` file
 1. Find the below line 
    ```csharp
-   private const string ClientId = "[Application Id pasted from the application registration portal]"
+   private const string ClientId = "4a1aa1d5-c567-49d0-ad0b-cd957a47f842"
    ``` 
    and replace the existing value with the application ID (clientId) of the  `UWP-App-calling-MSGraph` application copied from the Azure portal.
-1. (Optionally): Enable Windows Integrated Authentication when using a federated Azure AD tenant
-
-    Out of the box, this sample is not configured to work with Integrated Windows Authentication (IWA) when used with a federated Azure Active Directory domain. To work with IWA the application manifest must enable additional capabilities. These capabilities are not configured by default for this sample because applications requesting the Enterprise Authentication or Shared User Certificates capabilities require a higher level of verification to be accepted into the Windows Store, and not all developers may wish to perform the higher level of verification.
-    To enable Windows-Integrated Authentication, in Package.appxmanifest, in the Capabilities tab, enable:
-
-        - Enterprise Authentication
-        - Private Networks (Client & Server)
-        - Shared User Certificates
-    Also, `MainPage.xaml.cs`, when building the application, ensure that the following line of code: ```.WithUseCorporateNetwork(true)```
 
 ### Step 4: Run the sample
 
@@ -175,88 +143,6 @@ Open the project in your IDE (like Visual Studio) to configure the code.
 
 > [Consider taking a moment to share your experience with us.](https://forms.office.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR73pcsbpbxNJuZCMKN0lURpUOTFTSkg3WUVGTjZENFVYMDRRQjdXUkUzQyQlQCN0PWcu)
 
-### Known limitation: on Windows 10, you cannot sign in with your windows hello PIN
-
-If sign-in with your work or school account and your organization requires conditional access, you are asked to provide a certificate:
-
-- If you have not enabled UWP-specific considerations above, you will get this error:
-    ```Text
-    No valid client certificate found in the request.
-    No valid certificates found in the user's certificate store.
-    Please try again choosing a different authentication method.
-    ```
-- On Windows 10 desktop UWP application, if you enabled the settings described above, the list of certificates is presented, however if you choose to use your PIN, the PIN window is never presented. This is a known limitation with Web authentication broker in UWP applications running on Windows 10 (this works fine on Windows Phone 10). As a work-around, you will need to click on the **sign-in with other options** link and then choose **Sign-in with a username and password instead**, provide your password and go through the phone authentication.
-
-- we plan to remove this limitation in the future by integrating the Web Account Manager (WAM)
-
-## Alternate approach to use WithDefaultRedirectURI()
-
-In the current sample, `WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")` method is used. To use `WithDefaultRedirectURI()`, please follow below steps:
-
-1. In `MainPage.XAML.cs`, Update `WithRedirectUri` with `WithDefaultRedirectUri` as shown in below lines of code:
-
-**Current Code**
-
-```csharp
-
-PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
-    .WithAuthority(Authority)
-    .WithUseCorporateNetwork(false)
-    .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
-    .WithLogging((level, message, containsPii) =>
-     {
-         Debug.WriteLine($"MSAL: {level} {message} ");
-     }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
-    .Build();
-
-```
-**Updated Code**
-
-```csharp
-
-PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
-    .WithAuthority("https://login.microsoftonline.com/common")
-    .WithUseCorporateNetwork(false)
-    .WithDefaultRedirectUri()
-    .WithLogging((level, message, containsPii) =>
-     {
-         Debug.WriteLine($"MSAL: {level} {message} ");
-     }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
-    .Build();
-```
-
-2.	Discover the callback URI for your app by adding redirectURI field in `MainPage.xaml.cs` and setting a breakpoint on it:
-
-```csharp
-
-public sealed partial class MainPage : Page
-{
-        ...
-
-        string redirectURI = Windows.Security.Authentication.Web.WebAuthenticationBroker
-                            .GetCurrentApplicationCallbackUri().ToString();
-        public MainPage()
-        {
-            ...
-        }
-       ...
-}
-  
-```
-Run the app, and copy the value of redirectUri when the breakpoint is hit. The value should look something similar to the following:  
-`ms-app://s-1-15-2-1352796503-54529114-405753024-3540103335-3203256200-511895534-1429095407/`
-
-You can remove the mentioned line of code as it is required only once to fetch the value.
-
-3. Add the returned value in RedirectUri under Authentication blade in the Application Registration Portal.
-
-## Steps to build from scratch
-
-Follow the instructions given in [Windows desktop .NET guided walkthrough](https://docs.microsoft.com/azure/active-directory/develop/guidedsetups/active-directory-mobileanddesktopapp-windowsdesktop-intro), but:
-
-- Instead of creating a WPF project, you will need to create a **UWP** project
-- Instead of using a Label in the `MainWindow.xaml`, you will need to use a **TextBock** (as Labels are not supported in the UWP platform). Instead of the Label Content property, use the TextBlock's **Text** property
-- With UWP applications, you don't need to add a cache as it's already managed by MSAL.Net
 
 ## Community help and support
 
