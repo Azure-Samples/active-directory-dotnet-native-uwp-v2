@@ -42,10 +42,30 @@ namespace Native_UWP_V2
 
         private static string MSGraphURL = "https://graph.microsoft.com/v1.0/";
         private static AuthenticationResult authResult;
+        private static IAccount _currentUserAccount;
 
         public MainPage()
         {
             this.InitializeComponent();
+
+            // Initialize the MSAL library by building a public client application
+            PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
+                .WithAuthority(Authority)
+                .WithBroker(true)
+                 .WithLogging((level, message, containsPii) =>
+                 {
+                     Debug.WriteLine($"MSAL: {level} {message} ");
+                 }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
+                .Build();
+
+            _currentUserAccount = Task.Run(async () => await PublicClientApp.GetAccountsAsync()).Result.FirstOrDefault();
+
+            if (_currentUserAccount != null)
+            {
+                this.CallGraphButton.Content = "Call Microsoft Graph API";
+                this.SignOutButton.Visibility = Visibility.Visible;
+            }
+
         }
 
         /// <summary>
@@ -69,6 +89,7 @@ namespace Native_UWP_V2
                                       + "\nUser Principal Name: " + graphUser.UserPrincipalName;
                     DisplayBasicTokenInfo(authResult);
                     this.SignOutButton.Visibility = Visibility.Visible;
+                    this.CallGraphButton.Content = "Call Microsoft Graph API";
                 });
             }
             catch (MsalException msalEx)
@@ -87,7 +108,7 @@ namespace Native_UWP_V2
         /// </summary>
         /// <param name="scopes"></param>
         /// <returns> Access Token</returns>
-        private static async Task<string> SignInUserAndGetTokenUsingMSAL(string[] scopes)
+        private async Task<string> SignInUserAndGetTokenUsingMSAL(string[] scopes)
         {
             // returns smth like S-1-15-2-2601115387-131721061-1180486061-1362788748-631273777-3164314714-2766189824
             string sid = Windows.Security.Authentication.Web.WebAuthenticationBroker.GetCurrentApplicationCallbackUri().Host.ToUpper();
@@ -105,14 +126,18 @@ namespace Native_UWP_V2
                  }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
                 .Build();
 
-            // It's good practice to not do work on the UI thread, so use ConfigureAwait(false) whenever possible.
-            IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync(); 
-            IAccount firstAccount = accounts.FirstOrDefault();
+            _currentUserAccount = _currentUserAccount ?? (await PublicClientApp.GetAccountsAsync()).FirstOrDefault(); 
 
             try
             {
-                authResult = await PublicClientApp.AcquireTokenSilent(scopes, firstAccount)
+                authResult = await PublicClientApp.AcquireTokenSilent(scopes, _currentUserAccount)
                                                   .ExecuteAsync();
+
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    this.CallGraphButton.Content = "Call Microsoft Graph API";
+                });
+
             }
             catch (MsalUiRequiredException ex)
             {
@@ -124,7 +149,8 @@ namespace Native_UWP_V2
                                                   .ExecuteAsync()
                                                   .ConfigureAwait(false);
 
-            }
+            }            
+
             return authResult.AccessToken;
         }
 
@@ -132,7 +158,7 @@ namespace Native_UWP_V2
         /// Sign in user using MSAL and obtain a token for MS Graph
         /// </summary>
         /// <returns>GraphServiceClient</returns>
-        private async static Task<GraphServiceClient> SignInAndInitializeGraphServiceClient(string[] scopes)
+        private async Task<GraphServiceClient> SignInAndInitializeGraphServiceClient(string[] scopes)
         {
             GraphServiceClient graphClient = new GraphServiceClient(MSGraphURL,
                 new DelegateAuthenticationProvider(async (requestMessage) =>
@@ -157,8 +183,10 @@ namespace Native_UWP_V2
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
                     ResultText.Text = "User has signed-out";
+                    TokenInfoText.Text = string.Empty;
                     this.CallGraphButton.Visibility = Visibility.Visible;
                     this.SignOutButton.Visibility = Visibility.Collapsed;
+                    this.CallGraphButton.Content = "Sign-In and Call Microsoft Graph API";
                 });
             }
             catch (MsalException ex)

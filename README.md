@@ -30,20 +30,21 @@ urlFragment: uwp-signing-in-graph-aad
 ## About this sample
 
 ### Table of contents
-- [About this sample](#about-this-sample)
-  - [Overview](#overview)
-- [Steps to run](#steps-to-run)
-- [How to run this sample](#how-to-run-this-sample)
-  - [Step 1: Clone or download this repository](#step-1-clone-or-download-this-repository)
-  - [Step 2: Register the sample application with your Azure Active Directory tenant](#step-2-register-the-sample-application-with-your-azure-active-directory-tenant)
-  - [Step 3: Configure the  UWP App (UWP-App-calling-MSGraph) to use your app registration](#step-3-configure-the-uwp-app-uwp-app-calling-msgraph-to-use-your-app-registration)
-  - [Step 4: Run the sample](#step-4-run-the-sample)
-  - [Known limitation: on Windows 10, you cannot sign in with your windows hello PIN](#known-limitation-on-windows-10-you-cannot-sign-in-with-your-windows-hello-pin)
-- [Alternate approach to use WithDefaultRedirectURI()](#alternate-approach-to-use-withdefaultredirecturi)
-- [Steps to build from scratch](#steps-to-build-from-scratch)
-- [Community help and support](#community-help-and-support)
-- [Contributing](#contributing)
-- [More information](#more-information)
+- [Universal Windows Platform application signing in users with Microsoft and calling the Microsoft Graph](#universal-windows-platform-application-signing-in-users-with-microsoft-and-calling-the-microsoft-graph)
+  - [About this sample](#about-this-sample)
+    - [Table of contents](#table-of-contents)
+    - [Overview](#overview)
+  - [Steps to run](#steps-to-run)
+  - [How to run this sample](#how-to-run-this-sample)
+    - [Step 1: Clone or download this repository](#step-1-clone-or-download-this-repository)
+    - [Step 2: Register the sample application with your Azure Active Directory tenant](#step-2-register-the-sample-application-with-your-azure-active-directory-tenant)
+      - [Choose the Azure AD tenant where you want to create your applications](#choose-the-azure-ad-tenant-where-you-want-to-create-your-applications)
+      - [Register the UWP App (UWP-App-calling-MSGraph)](#register-the-uwp-app-uwp-app-calling-msgraph)
+    - [Step 3: Configure the  UWP App (UWP-App-calling-MSGraph) to use your app registration](#step-3-configure-the--uwp-app-uwp-app-calling-msgraph-to-use-your-app-registration)
+    - [Step 4: Run the sample](#step-4-run-the-sample)
+  - [Community help and support](#community-help-and-support)
+  - [Contributing](#contributing)
+  - [More information](#more-information)
 
 ### Overview
 
@@ -103,7 +104,7 @@ As a first step you'll need to:
    - Under **Supported account types**, select **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**.
 1. Select **Register** to create the application.
 1. In the app's registration screen, find and note the **Application (client) ID**. You use this value in your app's configuration file(s) later in your code.
-1. The redirect URI is tied to the application's identity. To find it, execute the following code inside your app: 
+1. The redirect URI is tied to the application's identity. To find it, execute the [following code](https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2/blob/5f798a47a35fff4f862d142561891845765ae836/Native_UWP_V2/MainPage.xaml.cs#L93) inside your app:
 
 ```csharp
  // returns smth like S-1-15-2-2601115387-131721061-1180486061-1362788748-631273777-3164314714-2766189824
@@ -131,11 +132,12 @@ Open the project in your IDE (like Visual Studio) to configure the code.
 >In the steps below, "ClientID" is the same as "Application ID" or "AppId".
 
 1. Open the `Native_UWP_V2\MainPage.xaml.cs` file
-1. Find the below line 
+1. Find the below [line](https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2/blob/5f798a47a35fff4f862d142561891845765ae836/Native_UWP_V2/MainPage.xaml.cs#L35)
    ```csharp
    private const string ClientId = "4a1aa1d5-c567-49d0-ad0b-cd957a47f842"
    ``` 
    and replace the existing value with the application ID (clientId) of the  `UWP-App-calling-MSGraph` application copied from the Azure portal.
+1. Another option is to modify [this line](https://github.com/Azure-Samples/active-directory-dotnet-native-uwp-v2/blob/5f798a47a35fff4f862d142561891845765ae836/Native_UWP_V2/MainPage.xaml.cs#L37) which is currently set to **"Common"** that means that an user from any Tenant can log-in into the application. To restrict the log-in to current tenant, you should change the value to tenant Id or tenant name as explained inside comment for the line.  
 
 ### Step 4: Run the sample
 
