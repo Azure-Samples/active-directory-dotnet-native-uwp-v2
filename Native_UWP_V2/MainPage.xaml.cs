@@ -1,8 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using active_directory_dotnet_native_uwp_v2;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -52,10 +54,8 @@ namespace Native_UWP_V2
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
                 .WithAuthority(Authority)
                 .WithBroker(true)
-                 .WithLogging((level, message, containsPii) =>
-                 {
-                     Debug.WriteLine($"MSAL: {level} {message} ");
-                 }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
+                //this is the currently recommended way to log MSAL message. For more info refer to https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/logging
+                .WithLogging(new IdentityLogger(EventLogLevel.Warning), enablePiiLogging: false) //set Identity Logging level to Warning which is a middle ground
                 .Build();
 
             _currentUserAccount = Task.Run(async () => await PublicClientApp.GetAccountsAsync()).Result.FirstOrDefault();
@@ -120,13 +120,11 @@ namespace Native_UWP_V2
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
                 .WithAuthority(Authority)
                 .WithBroker(true)
-                 .WithLogging((level, message, containsPii) =>
-                 {
-                     Debug.WriteLine($"MSAL: {level} {message} ");
-                 }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
+                //this is the currently recommended way to log MSAL message. For more info refer to https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/logging
+                .WithLogging(new IdentityLogger(EventLogLevel.Warning), enablePiiLogging: false) //set Identity Logging level to Warning which is a middle ground
                 .Build();
 
-            _currentUserAccount = _currentUserAccount ?? (await PublicClientApp.GetAccountsAsync()).FirstOrDefault(); 
+            _currentUserAccount = _currentUserAccount ?? (await PublicClientApp.GetAccountsAsync()).FirstOrDefault();
 
             try
             {
@@ -149,7 +147,7 @@ namespace Native_UWP_V2
                                                   .ExecuteAsync()
                                                   .ConfigureAwait(false);
 
-            }            
+            }
 
             return authResult.AccessToken;
         }
